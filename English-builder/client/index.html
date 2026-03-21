@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>RoadtoEnhance</title>
+  </head>
+  <body id="app-body">
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+    <link rel="icon" href="/vite.svg">
+  </body>
+</html>
+
+<script>
+  // Đoạn script này chạy siêu tốc trước khi Vue kịp tải
+  (function() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  })();
+</script>
