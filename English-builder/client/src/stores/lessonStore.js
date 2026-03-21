@@ -5,13 +5,21 @@ import { useAuthStore } from "./authStore";
 
 export const useLessonStore = defineStore("lesson", {
     state: () => ({
-        topics: [],
-        lessons: [],
-        currentLesson: null,
-        currentProgress: null,
-        loading: false,
-        error: null
-    }),
+    topics: [],
+    lessons: [],
+
+    // 🔥 NEW
+    currentTopics: [],
+    nextTopics: [],
+    currentLevel: null,
+    nextLevel: null,
+    unlockNextLevel: false,
+
+    currentLesson: null,
+    currentProgress: null,
+    loading: false,
+    error: null
+}),
 
     actions: {
         async fetchLessonsByTopic(topicId) {
@@ -28,14 +36,26 @@ export const useLessonStore = defineStore("lesson", {
                 this.loading = false;
             }
         },
-        async fetchTopics() {
-        this.loading = true;
-        try {
-            const res = await lessonAPI.getTopicsByLevel();
-            this.topics = res.data;
-        } catch (err) {
-            this.error = "Không thể tải chủ đề";
-        } finally { this.loading = false; }
+        async fetchTopicsForUser() {
+            this.loading = true;
+            try {
+                const res = await lessonAPI.getTopicsForUser();
+
+                console.log("API DATA:", res.data); // 👈 debug
+
+                this.currentLevel = res.data.currentLevel;
+                this.nextLevel = res.data.nextLevel;
+                this.unlockNextLevel = res.data.unlockNextLevel;
+
+                this.currentTopics = res.data.currentTopics || [];
+                this.nextTopics = res.data.nextTopics || [];
+
+            } catch (err) {
+                console.error(err);
+                this.error = "Cannot load topics";
+            } finally {
+                this.loading = false;
+            }
         },
 
         async fetchLessonDetail(lessonId) {

@@ -1,7 +1,7 @@
 import api from "./api";
 
 
-export const getTopicsByLevel = () => {
+export const getTopicsForUser = () => {
     return api.get("/lessons/topics");
 };
 

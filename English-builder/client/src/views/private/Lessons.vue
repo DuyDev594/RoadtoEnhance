@@ -40,25 +40,51 @@
         </div>
 
         <!-- Topics -->
-        <div
-            v-if="auth.user?.level && !lessonStore.loading && lessonStore.topics.length"
-            class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-        <TopicCard
-            v-for="topic in lessonStore.topics"
-            :key="topic._id"
-            :topic="topic"
-            @select="goToTopic"
-        />
+        <!-- CURRENT LEVEL -->
+        <div v-if="lessonStore.currentTopics.length">
+            <h2 class="text-xl font-bold mb-4 text-green-600">
+                Current Level: {{ lessonStore.currentLevel }}
+            </h2>
+
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <TopicCard
+                    v-for="topic in lessonStore.currentTopics"
+                    :key="topic._id"
+                    :topic="topic"
+                    @select="goToTopic"
+                />
+            </div>
+        </div>
+
+        <!-- NEXT LEVEL -->
+        <div v-if="lessonStore.nextTopics.length" class="mt-10">
+            <h2 class="text-xl font-bold mb-4 text-gray-500">
+                Next Level: {{ lessonStore.nextLevel }}
+            </h2>
+
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <TopicCard
+                    v-for="topic in lessonStore.nextTopics"
+                    :key="topic._id"
+                    :topic="topic"
+                    :locked="!lessonStore.unlockNextLevel"
+                    @select="goToTopic"
+                />
+            </div>
         </div>
 
         <!-- Empty -->
         <div
-        v-if="!lessonStore.loading && lessonStore.topics.length === 0"
-        class="text-center text-gray-500"
-        >
-        No topics available for your level yet.
+            v-if="
+            !lessonStore.loading &&
+            lessonStore.currentTopics.length === 0 &&
+            lessonStore.nextTopics.length === 0
+            "
+            class="text-center text-gray-500"
+            >
+            No topics available for your level yet.
         </div>
+        
     </div>
 </template>
 
@@ -78,11 +104,22 @@ const auth= useAuthStore();
 
 onMounted(() => {
     if (auth.user?.level) {
-        lessonStore.fetchTopics();
+        lessonStore.fetchTopicsForUser();
     }
 });
 
 const goToTopic = (topicId) => {
+    const topic = [...lessonStore.currentTopics, ...lessonStore.nextTopics]
+        .find(t => t._id === topicId);
+
+    if (
+        topic.level === lessonStore.nextLevel &&
+        !lessonStore.unlockNextLevel
+    ) {
+        alert("You need to complete current level first!");
+        return;
+    }
+
     router.push(`/app/lessons/${topicId}`);
 };
 

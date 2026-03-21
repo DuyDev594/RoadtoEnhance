@@ -3,13 +3,98 @@ import  Topic from "../models/Topic.js";
 import Lesson from "../models/Lesson.js";
 import User from "../models/User.js";
 
-export const getTopicsByLevel = async (req, res) => {
-    const topics = await Topic.find({
-        level: req.user.level,
-        isPublished: true
-    }).sort({ order: 1 });
+const LEVELS = ["A1", "A2", "B1", "B2", "C1"];
 
-    res.json(topics);
+function getNextLevel(level) {
+    const idx = LEVELS.indexOf(level);
+    return LEVELS[idx + 1] || null;
+}
+
+export const getTopicsForUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        const lessonProgress = user.lessonProgress || [];
+        const currentLevel = user.level;
+        const nextLevel = getNextLevel(currentLevel);
+
+        // 1. Lấy topics
+        const topics = await Topic.find({
+            level: { $in: [currentLevel, nextLevel] },
+            isPublished: true
+        }).sort({ order: 1 });
+
+        let currentTopics = [];
+        let nextTopics = [];
+
+        // 2. Tính progress từng topic
+        for (let topic of topics) {
+
+            const lessons = await Lesson.find({
+                topicId: topic._id,
+                isPublished: true
+            });
+
+            const lessonIds = lessons.map(l => l._id.toString());
+
+            const completedLessons = lessonProgress.filter(lp =>
+                lessonIds.includes(lp.lessonId?.toString()) &&
+                lp.status === "completed"
+            );
+
+            const percent = lessons.length === 0
+                ? 0
+                : completedLessons.length / lessons.length;
+
+            const topicData = {
+                ...topic.toObject(),
+                progress: percent,
+                isCompleted: percent === 1
+            };
+
+            if (topic.level === currentLevel) {
+                currentTopics.push(topicData);
+            } else {
+                nextTopics.push(topicData);
+            }
+        }
+
+        // 3. Tính unlock level
+        const currentTopicIds = currentTopics.map(t => t._id.toString());
+
+            // Lấy tất cả lesson thuộc current level
+            const allLessonsCurrentLevel = await Lesson.find({
+                topicId: { $in: currentTopicIds },
+                isPublished: true
+            });
+
+            const allLessonIds = allLessonsCurrentLevel.map(l => l._id.toString());
+
+            // Lọc lesson đã completed
+            const completedLessons = lessonProgress.filter(lp =>
+                allLessonIds.includes(lp.lessonId?.toString()) &&
+                lp.status === "completed"
+            );
+
+            // % hoàn thành
+            const levelProgress = allLessonsCurrentLevel.length === 0
+                ? 0
+                : completedLessons.length / allLessonsCurrentLevel.length;
+
+            // Unlock
+            const unlockNextLevel = levelProgress >= 0.8;
+
+        res.json({
+            currentLevel,
+            nextLevel,
+            unlockNextLevel,
+            currentTopics,
+            nextTopics
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to load topics" });
+    }
 };
 
 export const getLessonsByTopic = async (req, res) => {

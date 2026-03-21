@@ -1,7 +1,12 @@
 <template>
     <div
-        class="group bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer p-6 border border-transparent hover:border-blue-500"
-        @click="$emit('select', topic._id)"
+        @click="!locked && handleClick()"
+        :class="[
+            'group bg-white dark:bg-gray-800 rounded-xl shadow-md transition p-6 border',
+            locked
+            ? 'opacity-50 cursor-not-allowed pointer-events-none'
+            : 'cursor-pointer hover:shadow-xl hover:border-blue-500'
+        ]"
     >
         <!-- Header -->
         <div class="flex justify-between items-center mb-3">
@@ -27,6 +32,10 @@
         {{ topic.description || "No description available." }}
         </p>
 
+       <p v-if="locked" class="text-red-500 text-sm mt-2">
+        🔒 Locked - Complete current level first
+        </p>
+
         <!-- Action -->
         <div class="mt-6">
         <span
@@ -39,10 +48,16 @@
 </template>
 
 <script setup>
-defineProps({
-    topic: {
-        type: Object,
-        required: true
-    }
-});
+
+const { topic, locked } = defineProps({
+  topic: Object,
+  locked: Boolean
+})
+
+const emit = defineEmits(['select'])
+
+const handleClick = () => {
+  if (locked) return
+  emit('select', topic._id)
+}
 </script>
