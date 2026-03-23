@@ -47,6 +47,9 @@ app.use("/api/flashcards", flashcardRoutes);
 import userStatsRoutes from "./api/routes/userStatsRoutes.js";
 app.use("/api/user", userStatsRoutes);
 
+import writingRoutes from "./api/routes/writingRoutes.js";
+app.use("/api/writing", writingRoutes);
+
 app.listen(port, () => {
     console.log(`🚀 Server is running at http://localhost:${port}`);
 });

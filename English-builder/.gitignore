@@ -1,0 +1,10 @@
+**/.env
+# Chặn thư mục thư viện (Rất quan trọng)
+node_modules/
+**/node_modules/
+
+# Chặn các file log và rác của hệ thống
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store

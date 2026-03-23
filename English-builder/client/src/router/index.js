@@ -16,7 +16,7 @@ import Login from "../views/auth/Login.vue";
 import Register from "../views/auth/Register.vue";
 
 // Private pages
-import Welcome from "../views/private/Welcome.vue";
+import AI from "../views/private/AI.vue";
 import Lessons from "../views/private/Lessons.vue";
 import PlacementTest from "../views/private/PlacementTest.vue";
 import lessonList from "../views/private/LessonList.vue";
@@ -61,7 +61,18 @@ const routes = [
         component: AuthLayout,
         meta: { requiresAuth: true, role: "user" },
         children: [
-        { path: "welcome", component: Welcome },
+        {path: "ai-writing", component: AI,
+        children: [
+            {
+            path: "",
+            component: () => import("@/components/AI/AIWritingDashboard.vue")
+            },
+            {
+            path: "practice",
+            component: () => import("@/components/AI/AIWriting.vue")
+            }
+        ]
+        },
         { path: "lessons", component: Lessons },
         { path: "lessons/:topicId", component: lessonList },
         { path: "lesson/:id", name: "LessonDetail", component: LessonDetail },

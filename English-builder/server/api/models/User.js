@@ -56,6 +56,11 @@ lessonProgress: [
 lastPlacementTestAt: {
     type: Date,
     default: null
+},
+aiWriting: {
+  dailyCount: { type: Number, default: 0 },
+  lastUsed: { type: Date, default: null },
+  retryCount: { type: Number, default: 0 }
 }
 },
 {

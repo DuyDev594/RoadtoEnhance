@@ -43,6 +43,7 @@ onMounted(() => {
     data: props.modelValue || {},
 
     tools: {
+      
 
       header: {
         class: Header,
@@ -99,7 +100,12 @@ onMounted(() => {
             "#0070FF",
             "#03A9F4",
             "#00BCD4",
-            "#4CAF50"
+            "#4CAF50",
+            "#000000",
+            "#FF0000",
+            "#00FF00",
+            "#0000FF",
+            "#FFA500"
           ],
           defaultColor: "#0070FF",
           type: "text"

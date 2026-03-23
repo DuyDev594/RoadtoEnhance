@@ -42,6 +42,18 @@
       Flashcards
     </RouterLink>
 
+    <RouterLink
+     
+      to="/app/ai-writing"
+      class="px-3 py-2 rounded
+            text-gray-700 dark:text-gray-200
+            hover:bg-blue-600 hover:text-white
+            transition"
+    >
+      AI Writing
+    </RouterLink>
+    
+
     <button      @click="goToPlacementTest"
       
       class="px-3 py-2 rounded
