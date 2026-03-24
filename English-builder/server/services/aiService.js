@@ -3,7 +3,7 @@ import OpenAI from "openai";
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
+console.log("🌐 BASE URL:", client.baseURL);
 // ==========================
 // CONSTANTS
 // ==========================
@@ -13,6 +13,8 @@ const WORD_REQUIREMENT = "Your essay should be between 250 and 350 words.";
 // GENERATE TOPIC (PRODUCTION READY)
 // ==========================
 export async function generateTopic(level) {
+  console.log("🚀 START CALL OPENAI (generateTopic)");
+  console.log("🔑 KEY:", process.env.OPENAI_API_KEY?.slice(0, 10));
   const prompt = `
 You are an English teacher.
 
@@ -34,28 +36,29 @@ Return ONLY the topic text. No explanation.
 `;
 
   try {
-    const res = await client.chat.completions.create({
-      model: "gpt-4.1-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-    });
+  console.log("🔥 BEFORE CALL OPENAI (generateTopic)");
 
-    let topic = res.choices[0].message.content.trim();
+  const res = await client.responses.create({
+  model: "gpt-4.1-mini",
+  input: prompt,
+});
+  console.log("✅ FULL RESPONSE:", res);
+  console.log("📊 USAGE:", res.usage);
+  console.log("✅ OPENAI SUCCESS (generateTopic)");
 
-    // 🔒 FALLBACK: đảm bảo luôn có word requirement
-    if (!topic.includes("250") || !topic.includes("350")) {
-      topic += " " + WORD_REQUIREMENT;
-    }
+  let topic = res.output?.[0]?.content?.[0]?.text?.trim() || "";
 
-    return topic;
-
-  } catch (err) {
-    console.error("❌ generateTopic error:", err);
-
-    // fallback cứng nếu AI fail
-    return `Write about your daily routine and explain why it is important to you. ${WORD_REQUIREMENT}`;
+  if (!topic.includes("250") || !topic.includes("350")) {
+    topic += " " + WORD_REQUIREMENT;
   }
-}
+
+  return topic;
+
+} catch (err) {
+  console.error("❌ generateTopic error:", err.response?.data || err.message);
+
+  return `Write about your daily routine and explain why it is important to you. ${WORD_REQUIREMENT}`;
+}}
 
 // ==========================
 // SAFE JSON PARSE
@@ -80,6 +83,8 @@ function safeParse(text) {
 // EVALUATE ESSAY (STRICT + STABLE)
 // ==========================
 export async function evaluateEssay(level, essay) {
+  console.log("🚀 START CALL OPENAI (evaluateEssay)");
+console.log("🔑 KEY:", process.env.OPENAI_API_KEY?.slice(0, 10));
   const prompt = `
 You are a strict English examiner based on CEFR.
 
@@ -123,25 +128,32 @@ ${essay}
 `;
 
   try {
-    const res = await client.chat.completions.create({
-      model: "gpt-4.1-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.2,
-    });
+  console.log("🔥 BEFORE CALL OPENAI (evaluateEssay)");
 
-    const raw = res.choices[0].message.content;
+  const res = await client.responses.create({
+  model: "gpt-4.1-mini",
+  input: prompt,
+});
 
-    return safeParse(raw);
+  console.log("✅ OPENAI SUCCESS (evaluateEssay)");
 
-  } catch (err) {
-    console.error("❌ OpenAI error:", err);
+  const raw = res.output?.[0]?.content?.[0]?.text || "";
 
-    return {
-      score: 0,
-      level: "A1",
-      feedback: "System error. Please try again later.",
-      errors: [],
-      globalIssues: []
-    };
-  }
+  console.log("✅ FULL RESPONSE:", res);
+  console.log("📊 USAGE:", res.usage);
+  console.log("📥 RAW RESPONSE:", raw);
+
+  return safeParse(raw);
+
+} catch (err) {
+  console.error("❌ OpenAI error:", err.response?.data || err.message);
+
+  return {
+    score: 0,
+    level: "A1",
+    feedback: "System error. Please try again later.",
+    errors: [],
+    globalIssues: []
+  };
+}
 }

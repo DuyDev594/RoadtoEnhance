@@ -42,6 +42,7 @@ function validateAIResponse(data) {
  */
 export const getTopic = async (req, res) => {
   try {
+    console.log("🔥 API HIT: /api/writing/topic");
     const user = req.user;
 
     if (!user) {
@@ -63,7 +64,9 @@ export const getTopic = async (req, res) => {
 
     await user.save();
 
-    res.json({ topic });
+    res.json({ topic,
+      aiWriting: user.aiWriting
+     });
 
   } catch (err) {
     console.error("❌ getTopic error:", err);
@@ -79,6 +82,7 @@ export const getTopic = async (req, res) => {
  */
 export const submitEssay = async (req, res) => {
   try {
+    console.log("🔥 API HIT: /api/writing/submit");
     const { essay } = req.body;
     const user = req.user;
 
@@ -133,7 +137,7 @@ export const submitEssay = async (req, res) => {
 
     await user.save();
 
-    res.json(result);
+    res.json({...result, aiWriting: user.aiWriting});
 
   } catch (err) {
     console.error("❌ submitEssay error:", err);

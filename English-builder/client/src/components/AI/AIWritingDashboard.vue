@@ -16,7 +16,7 @@
       </p>
 
       <button
-        @click="$router.push('/app/ai-writing/practice')"
+        @click="router.push('/app/ai-writing/practice')"
         class="bg-blue-500 text-white px-4 py-2 rounded"
       >
         Start Writing
@@ -25,3 +25,9 @@
 
   </div>
 </template>
+<script setup>
+import { ref } from "vue";
+import {useRouter} from "vue-router";
+const router = useRouter();
+
+</script>

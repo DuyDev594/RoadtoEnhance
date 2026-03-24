@@ -13,19 +13,22 @@
     <!-- BUTTON -->
     <button
       @click="submitEssay"
-      class="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+      :disabled="loading || remaining <= 0"
+      class="mt-4 bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
     >
-      Submit
+      {{ loading ? "Submitting..." : "Submit" }}
     </button>
 
-    <p class="text-sm text-gray-500">
-        Remaining: {{ 2 - (user?.aiWriting?.dailyCount || 0) }} / 2
+    <!-- REMAINING -->
+    <p class="text-sm text-gray-500 mt-2">
+      Remaining: {{ remaining }} / 2
     </p>
-    
+
+    <!-- RESULT -->
     <AIResult
-        v-if="result"
-        :result="result"
-        :highlightedText="highlightedText"
+      v-if="result"
+      :result="result"
+      :highlightedText="highlightedText"
     />
 
   </div>
@@ -33,51 +36,81 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import api from "@/api/api";
 import EditorBlock from "@/components/EditorBlock.vue";
-import { highlightErrors } from "@/utils/highlight";
 import AIResult from "@/components/AI/AIResult.vue";
+import { highlightErrors } from "@/utils/highlight";
 
+// ✅ dùng API mới
+import { getTopic, submitEssay as submitEssayApi } from "@/api/aiWriting";
+
+// STATE
+const remaining = ref(2);
 const topic = ref("");
 const result = ref(null);
 const highlightedText = ref("");
+const loading = ref(false);
 
 const editorRef = ref(null);
 
-// GET topic
-onMounted(async () => {
+// =======================
+// LOAD TOPIC
+// =======================
+const loadTopic = async () => {
   try {
-    const res = await api.get("/writing/topic");
+    const res = await getTopic();
+
     topic.value = res.data.topic;
+    remaining.value = 2 - (res.data.aiWriting?.dailyCount || 0);
 
   } catch (err) {
     const msg = err.response?.data?.message || "Load topic failed";
 
-    console.error("LOAD TOPIC ERROR:", msg);
-
-    topic.value = msg; 
+    console.error("❌ LOAD TOPIC ERROR:", msg);
+    topic.value = msg;
   }
-});
+};
 
-// SUBMIT
+onMounted(loadTopic);
+
+// =======================
+// SUBMIT ESSAY
+// =======================
 const submitEssay = async () => {
-  const content = await editorRef.value.saveContent();
+  if (loading.value) return;
 
-  const text = content.blocks
-    .map(b => b.data.text || "")
-    .join(" ");
+  try {
+    loading.value = true;
 
-  const res = await api.post("/writing/submit", {
-    essay: text
-  });
+    const content = await editorRef.value.saveContent();
 
-  result.value = res.data;
+    const text = content.blocks
+      .map(b => b.data.text || "")
+      .join(" ");
 
-  // highlight
-  highlightedText.value = highlightErrors(
-    text,
-    res.data.errors || []
-  );
+    if (!text.trim()) {
+      alert("Essay is empty!");
+      return;
+    }
+
+    const res = await submitEssayApi(text);
+
+    // RESULT
+    result.value = res.data;
+
+    // 🔥 HIGHLIGHT LỖI
+    highlightedText.value = highlightErrors(
+      text,
+      res.data.errors || []
+    );
+
+    // UPDATE REMAINING
+    remaining.value = 2 - (res.data.aiWriting?.dailyCount || 0);
+
+  } catch (err) {
+    console.error("❌ SUBMIT ERROR:", err.response?.data || err.message);
+  } finally {
+    loading.value = false;
+  }
 };
 </script>
 
@@ -98,4 +131,5 @@ mark:hover::after {
   font-size: 12px;
   border-radius: 4px;
   white-space: nowrap;
-}</style>
+}
+</style>
