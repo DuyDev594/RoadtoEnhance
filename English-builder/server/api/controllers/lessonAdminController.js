@@ -6,6 +6,22 @@ export const createTopic = async (req, res) => {
     try {
         const { title, level, description } = req.body;
 
+         const errors = {};
+
+        if (!title) errors.title = "Title is required";
+        if (!level) errors.level = "Level is required";
+
+        if (!["A1", "A2", "B1", "B2", "C1"].includes(level)) {
+            errors.level = "Invalid level";
+        }
+
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({
+                message: "Validation failed",
+                errors
+            });
+        }
+
         // tìm order lớn nhất trong cùng level
         const lastTopic = await Topic.findOne({ level })
         .sort({ order: -1 });
@@ -45,6 +61,19 @@ export const getAllTopics = async (req, res) => {
 // UPDATE topic
 export const updateTopic = async (req, res) => {
     try {
+        const { title, level } = req.body;
+            const errors = {};
+        if (!title) errors.title = "Title is required";
+        if (level && !["A1", "A2", "B1", "B2", "C1"].includes(level)) {
+            errors.level = "Invalid level";
+        }
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({
+                message: "Validation failed",
+                errors
+            });
+        }
+
         const topic = await Topic.findByIdAndUpdate(
         req.params.id,
         req.body,
@@ -73,6 +102,18 @@ export const deleteTopic = async (req, res) => {
 export const createLesson = async (req, res) => {
     try {
         const { topicId, title, type } = req.body;
+
+        const errors = {};
+
+        if (!topicId) errors.topicId = "Topic is required";
+        if (!title) errors.title = "Title is required";
+
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({
+                message: "Validation failed",
+                errors
+            });
+        }
 
         const lastLesson = await Lesson.findOne({ topicId })
             .sort({ order: -1 });

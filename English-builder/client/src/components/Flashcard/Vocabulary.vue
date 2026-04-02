@@ -24,24 +24,32 @@
       <form @submit.prevent="handleSubmit" class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
         <input
+          
           v-model="form.word"
           placeholder="Word"
           class="border p-2 rounded focus:ring-2 focus:ring-blue-400"
           required
         />
-
+        <p v-if="errors.word" class="text-red-500 text-sm">
+          {{ errors.word }}
+        </p>
         <input
           v-model="form.definition"
           placeholder="Definition"
           class="border p-2 rounded focus:ring-2 focus:ring-blue-400"
         />
+        <p v-if="errors.definition" class="text-red-500 text-sm">
+          {{ errors.definition }}
+        </p>
 
         <input
           v-model="form.example"
           placeholder="Example sentence"
           class="border p-2 rounded focus:ring-2 focus:ring-blue-400"
         />
-
+          <p v-if="errors.example" class="text-red-500 text-sm">
+            {{ errors.example }}
+          </p>
         <input
           v-model="form.usIpa"
           placeholder="US IPA (e.g. /dɔːg/)"
@@ -65,7 +73,9 @@
           <option>B2</option>
           <option>C1</option>
         </select>
-
+          <p v-if="errors.level" class="text-red-500 text-sm">
+              {{ errors.level }}
+            </p>
         <select
           v-model="form.topic"
           class="border p-2 rounded focus:ring-2 focus:ring-blue-400"
@@ -75,7 +85,9 @@
             {{ t.name }}
           </option>
         </select>
-
+          <p v-if="errors.topic" class="text-red-500 text-sm">
+              {{ errors.topic }}
+            </p>
         <input
           type="file"
           @change="handleImageChange"
@@ -175,7 +187,7 @@ import { ref, onMounted } from "vue";
 import { useFlashcardStore } from "@/stores/flashcardStore.js";
 
 const store = useFlashcardStore();
-
+const errors = ref({});
 const selectedTopic = ref("");
 const isEditing = ref(false);
 const editingId = ref(null);
@@ -216,14 +228,24 @@ const handleSubmit = async () => {
   if (selectedFile) {
     formData.append("image", selectedFile);
   }
-
-  if (isEditing.value) {
+  try{
+    if (isEditing.value) {
     await store.editVocabulary(editingId.value, formData);
   } else {
     await store.addVocabulary(formData);
   }
-
+  errors.value = {};
   resetForm();
+  } catch (err) {
+    const data = err.response?.data;
+
+    if (data?.errors) {
+      errors.value = data.errors;
+    } else {
+      alert(data?.message);
+    }
+  }
+  
 };
 
 const editVocab = (v) => {

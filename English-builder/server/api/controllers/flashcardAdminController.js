@@ -11,7 +11,11 @@ export const createFlashcardTopic = async (req, res) => {
     const { name, description } = req.body;
 
     if (!name) {
-      return res.status(400).json({ message: "Topic name is required" });
+      return res.status(400).json({  success: false,
+    message: "Validation failed",
+    errors: {
+      name: "Topic name is required"
+    } });
     }
 
     const topic = await FlashcardTopic.create({ name, description });
@@ -105,9 +109,18 @@ export const createVocabulary = async (req, res) => {
   try {
     const { word, definition, example, level, usIpa, ukIpa, topic } = req.body;
 
-    if (!word || !definition || !level || !topic) {
+    const errors = {};
+
+    if (!word) errors.word = "Word is required";
+    if (!definition) errors.definition = "Definition is required";
+    if (!level) errors.level = "Level is required";
+    if (!topic) errors.topic = "Topic is required";
+
+    if (Object.keys(errors).length > 0) {
       return res.status(400).json({
-        message: "word, definition, level and topic are required"
+        success: false,
+        message: "Validation failed",
+        errors
       });
     }
 
@@ -160,7 +173,11 @@ export const createVocabulary = async (req, res) => {
   } catch (error) {
     if (error.code === 11000) {
       return res.status(400).json({
-        message: "This word already exists in this topic"
+        success: false,
+        message: "Duplicate data",
+        errors: {
+          word: "This word already exists in this topic"
+        }
       });
     }
 
@@ -179,7 +196,9 @@ export const getAllVocabularies = async (req, res) => {
 
     res.json(vocabularies);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false,
+  message: "Internal server error"
+});
   }
 };
 
@@ -223,10 +242,7 @@ export const updateVocabulary = async (req, res) => {
   try {
     const vocabulary = await Vocabulary.findById(req.params.id);
 
-    if (!vocabulary) {
-      return res.status(404).json({ message: "Vocabulary not found" });
-    }
-
+      
     const {
       word,
       definition,
@@ -236,6 +252,20 @@ export const updateVocabulary = async (req, res) => {
       usIpa,
       ukIpa
     } = req.body;
+
+    const errors = {};
+
+      if (word !== undefined && !word) errors.word = "Word cannot be empty";
+      if (definition !== undefined && !definition) errors.definition = "Definition cannot be empty";
+
+      if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Validation failed",
+          errors
+        });
+      }
+
 
     let imageUrl = vocabulary.imageUrl;
 

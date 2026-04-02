@@ -33,6 +33,27 @@ export const createUser = async (req, res) => {
     try {
         const { username, email, password, role } = req.body;
 
+        const errors = {};
+
+        if (!username) errors.username = "Username is required";
+        if (!email) errors.email = "Email is required";
+        if (!password) errors.password = "Password is required";
+
+        // simple email regex
+        if (email && !/^\S+@\S+\.\S+$/.test(email)) {
+            errors.email = "Invalid email format";
+        }
+
+        if (password && password.length < 6) {
+            errors.password = "Password must be at least 6 characters";
+        }
+
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({
+                message: "Validation failed",
+                errors
+            });
+        }
         // Check existing
         const existing = await User.findOne({ email });
         if (existing) {
@@ -64,6 +85,18 @@ export const updateUser = async (req, res) => {
     try {
         const { username, email, role, level } = req.body;
 
+        const errors = {};
+
+        if (!username) errors.username = "Username is required";
+        if (!email) errors.email = "Email is required";
+
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({
+                message: "Validation failed",
+                errors
+            });
+        }
+        
         const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {

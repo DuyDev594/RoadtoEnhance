@@ -1,5 +1,5 @@
 <template>
-
+<div class="relative z-50">
 <!-- ================= LOADING ================= -->
 <div
     v-if="!test && !authStore.user?.hasTakenPlacementTest"
@@ -229,7 +229,7 @@
     </button>
   </div>
 </div>
-
+</div>
 </template>
 
 <script setup>

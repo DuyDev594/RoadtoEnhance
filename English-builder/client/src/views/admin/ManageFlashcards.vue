@@ -31,7 +31,7 @@ import TopicManager from "@/components/Flashcard/FlashcardTopic.vue";
 import VocabularyManager from "@/components/Flashcard/Vocabulary.vue";
 
 const tab = ref("topics");
-
+const errord = ref({});
 
 const activeClass = "bg-blue-500 text-white";
 const inactiveClass = "bg-gray-200";

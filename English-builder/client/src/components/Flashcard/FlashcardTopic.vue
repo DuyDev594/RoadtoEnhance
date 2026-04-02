@@ -6,14 +6,19 @@
         v-model="form.name"
         placeholder="Topic name"
         class="border p-2 rounded w-1/3"
-        required
+        
       />
-
+      <p v-if="errors.name" class="text-red-500 text-sm">
+        {{ errors.name }}
+      </p>
       <input
         v-model="form.description"
         placeholder="Description"
         class="border p-2 rounded w-1/3"
       />
+      <p v-if="errors.description" class="text-red-500 text-sm">
+        {{ errors.description }}
+      </p>
 
       <button class="px-4 rounded text-white"
         :class="isEditing ? 'bg-yellow-500' : 'bg-green-500'"
@@ -73,7 +78,7 @@ import { ref, onMounted } from "vue";
 import { useFlashcardStore } from "@/stores/flashcardStore.js";
 
 const store = useFlashcardStore();
-
+const errors = ref({});
 const form = ref({
   name: "",
   description: ""
@@ -87,13 +92,23 @@ onMounted(() => {
 });
 
 const handleSubmit = async () => {
-  if (isEditing.value) {
+  try{
+    if (isEditing.value) {
     await store.editTopic(editingId.value, form.value);
   } else {
     await store.addTopic(form.value);
   }
-
+  errors.value = {};
   resetForm();
+  } catch (err) {
+    const data = err.response?.data;
+
+    if (data?.errors) {
+      errors.value = data.errors;
+    } else {
+      alert(data?.message);
+    }
+  }
 };
 
 const editTopic = (topic) => {

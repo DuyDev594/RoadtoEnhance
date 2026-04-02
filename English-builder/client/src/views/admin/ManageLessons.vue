@@ -34,7 +34,9 @@
             placeholder="Lesson title"
             class="w-full p-2 border rounded"
         />
-
+        <p v-if="lessonErrors.title" class="text-red-500 text-sm">
+            {{ lessonErrors.title }}
+            </p>
         <div>
             <label class="block text-sm font-medium mb-1">
                 Lesson Type
@@ -180,7 +182,7 @@ const goDetail = (id) => {
 const topics = ref([]);
 const lessons = ref([]);
 const selectedTopicId = ref("");
-
+const lessonErrors = ref({});
 const newLesson = ref({
     title: "",
     order: 1,
@@ -204,9 +206,14 @@ onMounted(async () => {
 
 /* ================= ACTIONS ================= */
 const createNewLesson = async () => {
-    if (!newLesson.value.title) return;
+    lessonErrors.value = {};
 
-    await createLesson({
+    if (!newLesson.value.title) {
+        lessonErrors.value.title = "Title is required";
+        return;
+    }
+    try {
+        await createLesson({
         topicId: selectedTopicId.value,
         ...newLesson.value
     });
@@ -216,6 +223,16 @@ const createNewLesson = async () => {
     newLesson.value.type = "video";
 
     await loadLessons();
+    } catch(err) {
+        const resErrors = err.response?.data?.errors;
+
+        if (resErrors) {
+            lessonErrors.value = resErrors;
+        } else {
+            alert(err.response?.data?.message || "Create lesson failed");
+        }
+    }
+    
 };
 
 const editLesson = (lesson) => {

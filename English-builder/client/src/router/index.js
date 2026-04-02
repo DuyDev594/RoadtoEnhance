@@ -78,7 +78,7 @@ const routes = [
         { path: "lesson/:id", name: "LessonDetail", component: LessonDetail },
         { path: "profile", component: Profile },
         { path: "profile/edit", component: EditProfile },
-        { path: "placement-test", component: PlacementTest, meta: { requiresAuth: true }},
+        { path: "placement-test", component: PlacementTest, meta: { requiresAuth: true, hideLayout: true } },
         { path: "flashcards", component: Flashcards },
         ],
     },

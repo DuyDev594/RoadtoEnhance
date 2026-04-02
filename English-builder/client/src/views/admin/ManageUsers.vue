@@ -113,6 +113,9 @@
                         placeholder="e.g. johndoe" 
                         class="w-full pl-4 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-800 dark:text-white"
                     />
+                    <p v-if="errors.username" class="text-red-500 text-sm mt-1">
+                        {{ errors.username }}
+                        </p>
                     </div>
                 </div>
 
@@ -124,6 +127,9 @@
                     placeholder="name@example.com" 
                     class="w-full pl-4 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-800 dark:text-white"
                     />
+                    <p v-if="errors.email" class="text-red-500 text-sm mt-1">
+                        {{ errors.email }}
+                        </p>
                 </div>
 
                 <div class="space-y-1">
@@ -134,6 +140,9 @@
                     placeholder="••••••••" 
                     class="w-full pl-4 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-800 dark:text-white"
                     />
+                    <p v-if="errors.password" class="text-red-500 text-sm mt-1">
+                        {{ errors.password }}
+                        </p>
                 </div>
 
                 <div class="space-y-1">
@@ -309,7 +318,7 @@ const activeTab = ref("user");
 const showModal = ref(false);
 const showEditModal = ref(false);
 const editingUser = ref(null);
-
+const errors= ref({});
 
 // Add User Form
 const form = ref({
@@ -320,7 +329,8 @@ const form = ref({
 });
 // Add User
 const addUser = async () => {
-    await createUser(form.value);
+    errors.value = {};
+    try{await createUser(form.value);
     showModal.value = false;
     form.value = {
     username: "",
@@ -329,6 +339,16 @@ const addUser = async () => {
     role: "user",
     };
     fetchUsers();
+    }catch (err) {
+            const resErrors = err.response?.data?.errors;
+
+            if (resErrors) {
+                errors.value = resErrors;
+            } else {
+                alert(err.response?.data?.message || "Something went wrong");
+            }
+        }
+    
 };
 // Edit User Form
 const editForm = ref({

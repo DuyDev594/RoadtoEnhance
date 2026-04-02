@@ -9,12 +9,16 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <input v-model="form.title" placeholder="Title"
             class="input" />
-
-            <select v-model="form.level" class="input">
+            <p v-if="errors.title" class="text-red-500 text-sm">
+                {{ errors.title }}
+                </p>
+            <select v-model="form.level" class="input">                
             <option disabled value="">Level</option>
             <option v-for="l in levels" :key="l">{{ l }}</option>
             </select>
-
+            <p v-if="errors.level" class="text-red-500 text-sm">
+                {{ errors.level }}
+                </p>
             <button @click="createTopic"
             class="btn-primary">
             Create
@@ -89,6 +93,7 @@ import api from "@/api/api";
 
 const topics = ref([]);
 const editing = ref(null);
+const errors = ref ({});
 
 const levels = ["A1", "A2", "B1", "B2", "C1"];
 
@@ -107,9 +112,23 @@ onMounted(fetchTopics);
 
 // CRUD
 const createTopic = async () => {
+    errors.value = {};
+    try{
+
     await api.post("/admin/topics", form.value);
-    form.value = { title: "", level: "", order: 1 };
-    fetchTopics();
+
+        form.value = { title: "", level: "", order: 1 };
+        fetchTopics();
+
+    } catch (err) {
+        const resErrors = err.response?.data?.errors;
+
+        if (resErrors) {
+            errors.value = resErrors;
+        } else {
+            alert(err.response?.data?.message || "Create failed");
+        }
+    }
 };
 
 const editTopic = (topic) => {
