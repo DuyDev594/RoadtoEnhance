@@ -1,5 +1,14 @@
 <template>
   <div class="p-6 max-w-5xl mx-auto space-y-6" v-if="lesson">
+    <div class="flex items-center gap-3">
+    <!-- BACK BUTTON -->
+    <button
+      @click="goBack"
+      class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg transition"
+    >
+      ← Go Back to Lessons
+    </button>
+    </div>
     <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm">
       <div>
         <h1 class="text-2xl font-bold text-gray-800">Lesson Format</h1>
@@ -85,10 +94,11 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import * as adminAPI from "@/api/lessonAdmin";
 import EditorBlock from "../../components/EditorBlock.vue";
 
+const router = useRouter();
 const route = useRoute();
 const lesson = ref(null);
 const videoInput = ref("");
@@ -191,7 +201,9 @@ const saveAll = async () => {
     alert(`Error: ${msg}`);
   }
 };
-
+const goBack = () => {
+  router.push("/admin/lessons");
+};
 const addSegment = () => segments.value.push({ transcript: "", start: 0, end: 0, order: segments.value.length + 1, isNew: true });
 const removeSegment = (idx) => segments.value.splice(idx, 1);
 const addQuestion = () => reviewQuestions.value.push({ type: 'multiple_choice', question: '', optionsText: '', answer: '' });

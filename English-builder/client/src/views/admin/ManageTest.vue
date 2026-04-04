@@ -49,6 +49,14 @@
                 </label>
 
                 <button
+                  @click.stop="openEditTestSet(set)"
+                  class="text-yellow-600 hover:text-yellow-800"
+                  title="Edit test set"
+                >
+                  <font-awesome-icon icon="pen-to-square" />
+                </button>
+
+                <button
                   @click.stop="deleteTestSet(set?._id)"
                   class="text-sm text-red-500 hover:underline"
                   title="Delete test set"
@@ -248,6 +256,33 @@
 
   </div>
 </div>
+<div
+  v-if="editingTestSet"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+>
+  <div class="bg-white w-[500px] rounded-xl shadow p-6 space-y-4">
+
+    <h2 class="text-lg font-bold">Edit Test Set</h2>
+
+    <input
+      v-model="editForm.name"
+      placeholder="Test set name"
+      class="w-full border rounded px-3 py-2"
+    />
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3">
+      <button @click="editingTestSet = null" class="px-4 py-2 bg-gray-200 rounded">
+        Cancel
+      </button>
+
+      <button @click="updateTestSetHandler" class="px-4 py-2 bg-blue-600 text-white rounded">
+        Save
+      </button>
+    </div>
+
+  </div>
+</div>
 </template>
 
 <script setup>
@@ -274,6 +309,11 @@ const openVocabForm = ref(false);
 const openGrammarForm = ref(false);
 const editingVocabQuestion = ref(null);
 const editingGrammarQuestion = ref(null);
+const editingTestSet = ref(null);
+const editForm = ref({
+  name: "",
+  
+});
 
 const fetchTestSets = async () => {
     try {
@@ -301,6 +341,22 @@ const selectTestSet = async (set) => {
         loadQuestions()
     ]);
 };
+
+const updateTestSetHandler = async () => {
+  try {
+    await placementAdminApi.updateTestSet(
+      editingTestSet.value._id,
+      editForm.value
+    );
+
+    await fetchTestSets();
+    editingTestSet.value = null;
+
+  } catch (err) {
+    alert("Update failed");
+    console.error(err);
+  }
+}
 
 const loadReadingPassages = async () => {
     if (!selectedTestSet.value) return;
@@ -388,6 +444,15 @@ const toggleActive = async (set) => {
   } catch (err) {
     alert("Update failure status ");
   }
+};
+
+const openEditTestSet = (set) => {
+  editingTestSet.value = set;
+
+  editForm.value = {
+    name: set.name || "",
+    
+  };
 };
 
 const openCreateTestSet = async () => {

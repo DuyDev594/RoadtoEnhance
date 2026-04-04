@@ -62,11 +62,18 @@ export const getAllTopics = async (req, res) => {
 export const updateTopic = async (req, res) => {
     try {
         const { title, level } = req.body;
-            const errors = {};
-        if (!title) errors.title = "Title is required";
-        if (level && !["A1", "A2", "B1", "B2", "C1"].includes(level)) {
+
+        const errors = {};
+
+        // CHỈ validate khi có gửi lên
+        if (title !== undefined && !title) {
+            errors.title = "Title is required";
+        }
+
+        if (level !== undefined && !["A1", "A2", "B1", "B2", "C1"].includes(level)) {
             errors.level = "Invalid level";
         }
+
         if (Object.keys(errors).length > 0) {
             return res.status(400).json({
                 message: "Validation failed",
@@ -75,10 +82,11 @@ export const updateTopic = async (req, res) => {
         }
 
         const topic = await Topic.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
+            req.params.id,
+            { $set: req.body }, // 🔥 đảm bảo chỉ update field gửi lên
+            { new: true }
         );
+
         res.json(topic);
     } catch (err) {
         res.status(500).json({ message: err.message });
