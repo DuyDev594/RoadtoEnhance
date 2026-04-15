@@ -1,10 +1,10 @@
 <template>
-  <div class="p-6 space-y-6">
-    <h1 class="text-2xl font-bold">Manage Placement Tests</h1>
+  <div class="p-6 max-w-7xl mx-auto space-y-6">
+    <h1 class="text-4xl font-bold text-gray-800 dark:text-white">Manage Placement Tests</h1>
     <div class="grid grid-cols-3 gap-6">
       <div class="col-span-1 p-4 bg-white rounded shadow">
         <div class="flex items-center justify-between mb-3">
-          <h2 class="font-semibold">Test Sets</h2>
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Test Sets</h2>
           <button
             @click="openCreateTestSet"
             class="px-3 py-1 text-white transition bg-green-600 hover:bg-green-700 rounded-lg shadow"
@@ -26,7 +26,7 @@
           >
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
-                <span class="font-medium">
+                <span class="text-base font-medium text-gray-800 dark:text-gray-100-medium">
                   {{ set?.name || 'Unnamed Set' }}
                 </span>
 
@@ -75,7 +75,7 @@
         </div>
 
         <div v-else>
-          <h2 class="pb-2 mb-4 text-xl font-semibold text-blue-700 border-b">
+          <h2 class="text-xl font-semibold text-blue-600 border-b pb-2 mb-4">
             {{ selectedTestSet?.name }}
           </h2>
 
@@ -103,7 +103,7 @@
             >
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-800">
+                  <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
                     Passage {{ p?.order }}: {{ p?.title }}
                   </h3>
                   <p class="text-sm text-gray-500">Level: {{ p?.level }}</p>
@@ -157,12 +157,15 @@
 
           <div v-if="activeTab === 'questions'" class="space-y-6">
             <button @click="loadQuestions" class="flex items-center gap-2 px-3 py-1 text-white bg-green-600 rounded">
-              <font-awesome-icon icon="arrow-rotate-right" /> Refresh
+              <font-awesome-icon icon="arrow-rotate-right" />
+               Refresh
             </button>
 
             <div class="p-4 space-y-3 border rounded bg-gray-50">
               <div class="flex items-center justify-between pb-2 border-b">
-                <h3 class="font-semibold text-blue-800">Vocabulary Questions</h3>
+                <h3 class="text-lg font-semibold text-blue-600">
+                  Vocabulary Questions
+                </h3>
                 <button class="text-xl text-blue-600" @click="openVocabForm = !openVocabForm; editingVocabQuestion = null">
                   <font-awesome-icon
                     :icon="openVocabForm ? faCircleMinus : faCirclePlus"
@@ -182,7 +185,8 @@
 
             <div class="p-4 space-y-3 border rounded bg-gray-50">
               <div class="flex items-center justify-between pb-2 border-b">
-                <h3 class="font-semibold text-blue-800">Grammar Questions</h3>
+                <h3 class="text-lg font-semibold text-blue-600">
+                  Grammar Questions</h3>
                 <button class="text-xl text-blue-600" @click="openGrammarForm = !openGrammarForm; editingGrammarQuestion = null">
                   <font-awesome-icon
                     :icon="openGrammarForm ? faCircleMinus : faCirclePlus"
@@ -215,7 +219,7 @@
       class="absolute text-xl text-gray-500 top-3 right-4 hover:text-red-500"
       @click="closeAllForms"
     >
-      ✕
+      <font-awesome-icon icon="xmark" />
     </button>
 
     <!-- VOCAB -->

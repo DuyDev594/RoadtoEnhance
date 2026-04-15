@@ -7,13 +7,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
         </router-link>
-        <h1 class="text-2xl font-black text-slate-800 tracking-tight">Curriculum Content</h1>
+        <h1 class="text-4xl font-bold text-slate-800 tracking-tight">Curriculum Content</h1>
       </div>
     </div>
 
     <div v-if="lessonStore.loading" class="flex flex-col items-center justify-center py-24">
       <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500/20 border-t-blue-500"></div>
-      <p class="mt-4 text-slate-400 font-medium">Fetching lessons...</p>
+      <p class="mt-4 text-base text-slate-400 font-medium">Fetching lessons...</p>
     </div>
 
     <div v-else-if="lessonStore.lessons.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -66,7 +66,7 @@
 
           <div>
             <h3 :class="[
-              'font-bold transition-colors',
+              'text-lg font-bold transition-colors',
               authStore.isLocked(lesson, lessonStore.lessons) 
                 ? 'text-slate-400' 
                 : 'text-slate-800'
@@ -74,7 +74,7 @@
               {{ lesson.title }}
             </h3>
 
-            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            <p class="text-sm font-medium uppercase tracking-widest text-slate-400">
               Order #{{ lesson.order }} • {{ lesson.type }}
             </p>
           </div>
@@ -92,8 +92,8 @@
     </div>
 
     <div v-else class="text-center py-20 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
-      <div class="text-4xl mb-4">📭</div>
-      <p class="text-slate-400 font-medium italic">No lessons available in this module yet.</p>
+      <font-awesome-icon icon="circle-info" class="text-4xl mb-4 text-gray-600 dark:text-gray-400 " />
+      <p class="text-slate-400 font-medium italic text-base">No lessons available in this module yet.</p>
     </div>
   </div>
 </template>
@@ -103,6 +103,7 @@ import { computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLessonStore } from "@/stores/lessonStore";
 import { useAuthStore } from "@/stores/authStore";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const route = useRoute();
 const router = useRouter();

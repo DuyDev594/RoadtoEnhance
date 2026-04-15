@@ -8,7 +8,7 @@ export const getLearningActivity = async (req, res) => {
 
     const user = await User.findById(userId);
 
-    /* ===== LESSON ACTIVITY ===== */
+    // LESSON ACTIVITY 
 
     const lessonMap = {};
 
@@ -25,7 +25,7 @@ export const getLearningActivity = async (req, res) => {
       lessonMap[date] += 1;
     });
 
-    /* ===== FLASHCARD ACTIVITY ===== */
+    // FLASHCARD ACTIVITY
 
     const flashcards = await UserVocabularyProgress.aggregate([
       {
@@ -47,7 +47,7 @@ export const getLearningActivity = async (req, res) => {
       }
     ]);
 
-    /* ===== MERGE RESULT ===== */
+    //MERGE RESULT
 
     const result = {};
 

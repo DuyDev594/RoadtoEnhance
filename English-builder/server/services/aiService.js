@@ -3,18 +3,17 @@ import OpenAI from "openai";
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-console.log("🌐 BASE URL:", client.baseURL);
-// ==========================
-// CONSTANTS
-// ==========================
-const WORD_REQUIREMENT = "Your essay should be between 250 and 350 words.";
+console.log("BASE URL:", client.baseURL);
 
-// ==========================
+// CONSTANTS
+
+const WORD_REQUIREMENT = "Your essay should be between 200 and 350 words.";
+
 // GENERATE TOPIC (PRODUCTION READY)
-// ==========================
+
 export async function generateTopic(level) {
-  console.log("🚀 START CALL OPENAI (generateTopic)");
-  console.log("🔑 KEY:", process.env.OPENAI_API_KEY?.slice(0, 10));
+  console.log("START CALL OPENAI (generateTopic)");
+  console.log("KEY:", process.env.OPENAI_API_KEY?.slice(0, 10));
   const prompt = `
 You are an English teacher.
 
@@ -36,38 +35,38 @@ Return ONLY the topic text. No explanation.
 `;
 
   try {
-  console.log("🔥 BEFORE CALL OPENAI (generateTopic)");
+  console.log("BEFORE CALL OPENAI (generateTopic)");
 
   const res = await client.responses.create({
   model: "gpt-4.1-mini",
   input: prompt,
 });
-  console.log("✅ FULL RESPONSE:", res);
-  console.log("📊 USAGE:", res.usage);
-  console.log("✅ OPENAI SUCCESS (generateTopic)");
+  console.log("FULL RESPONSE:", res);
+  console.log("USAGE:", res.usage);
+  console.log("OPENAI SUCCESS (generateTopic)");
 
   let topic = res.output?.[0]?.content?.[0]?.text?.trim() || "";
 
-  if (!topic.includes("250") || !topic.includes("350")) {
+  if (!topic.includes("200") || !topic.includes("350")) {
     topic += " " + WORD_REQUIREMENT;
   }
 
   return topic;
 
 } catch (err) {
-  console.error("❌ generateTopic error:", err.response?.data || err.message);
+  console.error("generateTopic error:", err.response?.data || err.message);
 
   return `Write about your daily routine and explain why it is important to you. ${WORD_REQUIREMENT}`;
 }}
 
-// ==========================
+
 // SAFE JSON PARSE
-// ==========================
+
 function safeParse(text) {
   try {
     return JSON.parse(text);
   } catch (err) {
-    console.error("❌ JSON parse error:", text);
+    console.error("JSON parse error:", text);
 
     return {
       score: 0,
@@ -79,13 +78,13 @@ function safeParse(text) {
   }
 }
 
-// ==========================
+
 // EVALUATE ESSAY (STRICT + STABLE)
-// ==========================
+
 export async function evaluateEssay(level, essay) {
-  console.log("🚀 START CALL OPENAI (evaluateEssay)");
-console.log("🔑 KEY:", process.env.OPENAI_API_KEY?.slice(0, 10));
-  const prompt = `
+  console.log(" START CALL OPENAI (evaluateEssay)");
+console.log(" KEY:", process.env.OPENAI_API_KEY?.slice(0, 10));
+const prompt = `
 You are a strict English examiner based on CEFR.
 
 STRICT RULES:
@@ -128,25 +127,25 @@ ${essay}
 `;
 
   try {
-  console.log("🔥 BEFORE CALL OPENAI (evaluateEssay)");
+  console.log("BEFORE CALL OPENAI (evaluateEssay)");
 
   const res = await client.responses.create({
   model: "gpt-4.1-mini",
   input: prompt,
 });
 
-  console.log("✅ OPENAI SUCCESS (evaluateEssay)");
+  console.log("OPENAI SUCCESS (evaluateEssay)");
 
   const raw = res.output?.[0]?.content?.[0]?.text || "";
 
-  console.log("✅ FULL RESPONSE:", res);
-  console.log("📊 USAGE:", res.usage);
-  console.log("📥 RAW RESPONSE:", raw);
+  console.log("FULL RESPONSE:", res);
+  console.log("USAGE:", res.usage);
+  console.log("RAW RESPONSE:", raw);
 
   return safeParse(raw);
 
 } catch (err) {
-  console.error("❌ OpenAI error:", err.response?.data || err.message);
+  console.error("OpenAI error:", err.response?.data || err.message);
 
   return {
     score: 0,

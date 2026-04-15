@@ -24,7 +24,7 @@ export const startPlacementTest = async (req, res) => {
         }
 
 
-        // 1️⃣ Lấy tất cả test set active
+        
         const activeTestSets = await PlacementTestSet.find({ isActive: true });
 
         if (!activeTestSets.length) {
@@ -33,25 +33,25 @@ export const startPlacementTest = async (req, res) => {
             });
         }
 
-        // 2️⃣ Lấy danh sách test set user đã làm
+        
         const usedTestSetIds = await PlacementResult.find({ userId })
             .distinct("testSetId");
 
-        // 3️⃣ Filter ra test set chưa làm
+        
         const availableTestSets = activeTestSets.filter(
             ts => !usedTestSetIds.some(id => id.toString() === ts._id.toString())
         );
 
-        // 4️⃣ Nếu đã làm hết → cho random lại toàn bộ
+        
         const pool = availableTestSets.length
             ? availableTestSets
             : activeTestSets;
 
-        // 5️⃣ Random từ pool
+        
         const randomIndex = Math.floor(Math.random() * pool.length);
         const randomTestSet = pool[randomIndex];
 
-        // 3️⃣ Tạo hoặc update PlacementResult
+        
         const placementResult = await PlacementResult.create({
             userId,
             testSetId: randomTestSet._id,
@@ -229,7 +229,7 @@ export const getActivePlacementTest = async (req, res) => {
     try {
         const userId = req.user._id;
 
-        // 1️⃣ Lấy result gần nhất của user
+        
         const result = await PlacementResult.findOne({ userId })
             .sort({ createdAt: -1 });
 
@@ -299,7 +299,7 @@ export const getActivePlacementTest = async (req, res) => {
 export const canRetakePlacementTest = async (user) => {
     const THREE_MONTHS = 90 * 24 * 60 * 60 * 1000;
 
-    // ❗ Nếu chưa từng làm test → cho làm luôn
+    
     if (!user.lastPlacementTestAt) return { allowed: true };
 
     const now = Date.now();
@@ -307,7 +307,6 @@ export const canRetakePlacementTest = async (user) => {
 
     const enoughTime = now - lastTest >= THREE_MONTHS;
 
-    // 🔥 Đếm lesson completed
     const completedLessons = user.lessonProgress.filter(
         l => l.status === "completed"
     ).length;

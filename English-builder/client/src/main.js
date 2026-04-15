@@ -30,7 +30,16 @@ import {
     faList,
     faUsers,
     faCirclePlus,
-    faCircleMinus
+    faCircleMinus,
+    faBullseye,
+    faChartLine,
+    faBan,
+    faCheck,
+    faInfo,
+    faHeadphones,
+    faFile,
+    faLightbulb,
+    faXmark
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -57,7 +66,16 @@ library.add(
     faCircleInfo,
     faList,
     faCirclePlus,
-    faCircleMinus
+    faCircleMinus,
+    faBullseye,
+    faChartLine,
+    faBan,
+    faCheck,
+    faInfo,
+    faHeadphones,
+    faFile,
+    faLightbulb,
+    faXmark
 );
 
 const app = createApp(App);

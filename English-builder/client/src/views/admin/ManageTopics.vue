@@ -1,22 +1,22 @@
 <template>
-    <div class="p-6">
-        <h1 class="text-2xl font-bold mb-6"> Manage Topics</h1>
+    <div class="p-6 max-w-6xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8 text-gray-800 dark:text-white"> Manage Topics</h1>
 
         <!-- Create Topic -->
         <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow mb-8">
-        <h2 class="font-semibold mb-4"> Create Topic</h2>
+        <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white"> Create Topic</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <input v-model="form.title" placeholder="Title"
             class="input" />
-            <p v-if="errors.title" class="text-red-500 text-sm">
+            <p v-if="errors.title" class="text-sm text-red-500 mt-1">
                 {{ errors.title }}
                 </p>
             <select v-model="form.level" class="input">                
             <option disabled value="">Level</option>
             <option v-for="l in levels" :key="l">{{ l }}</option>
             </select>
-            <p v-if="errors.level" class="text-red-500 text-sm">
+            <p v-if="errors.level" class="text-sm text-red-500 mt-1">
                 {{ errors.level }}
                 </p>
             <button @click="createTopic"
@@ -31,20 +31,20 @@
         <table class="w-full">
             <thead class="bg-gray-100 dark:bg-gray-700">
             <tr>
-                <th class="th">Title</th>
-                <th class="th">Level</th>
-                <th class="th">Order</th>
-                <th class="th">Published</th>
-                <th class="th">Actions</th>
+                <th class="th text-sm font-semibold text-gray-700 dark:text-gray-300">Title</th>
+                <th class="th text-sm font-semibold text-gray-700 dark:text-gray-300">Level</th>
+                <th class="th text-sm font-semibold text-gray-700 dark:text-gray-300">Order</th>
+                <th class="th text-sm font-semibold text-gray-700 dark:text-gray-300">Published</th>
+                <th class="th text-sm font-semibold text-gray-700 dark:text-gray-300">Actions</th>
             </tr>
             </thead>
 
             <tbody>
             <tr v-for="topic in topics" :key="topic._id"
                 class="border-t dark:border-gray-700">
-                <td class="td">{{ topic.title }}</td>
-                <td class="td">{{ topic.level }}</td>
-                <td class="td">{{ topic.order }}</td>
+                <td class="td text-base text-gray-800 dark:text-gray-100">{{ topic.title }}</td>
+                <td class="td text-base text-gray-600 dark:text-gray-300">{{ topic.level }}</td>
+                <td class="td text-base text-gray-600 dark:text-gray-300">{{ topic.order }}</td>
                 <td class="td">
                 <input type="checkbox"
                     :checked="topic.isPublished"
@@ -68,7 +68,7 @@
         <!-- Edit Modal -->
         <div v-if="editing" class="modal">
         <div class="modal-box">
-            <h3 class="font-semibold mb-4">✏️ Edit Topic</h3>
+            <h3 class="font-semibold mb-4">Edit Topic</h3>
 
             <input v-model="editing.title" class="input mb-3" />
             <input type="number" v-model.number="editing.order" class="input mb-3" />
@@ -78,8 +78,8 @@
             </select>
 
             <div class="flex justify-end gap-2">
-            <button class="btn" @click="editing=null">Cancel</button>
-            <button class="btn-primary" @click="updateTopic">Save</button>
+            <button class="btn text-sm" @click="editing=null">Cancel</button>
+            <button class="btn-primary text-sm" @click="updateTopic">Save</button>
             </div>
         </div>
         </div>

@@ -3,9 +3,7 @@ import FlashcardTopic from "../models/FlashcardTopic.js";
 import cloudinary from "../../utils/cloundinary.js";
 import User from "../models/User.js";
 
-/**
- * CREATE topic
- */
+
 export const createFlashcardTopic = async (req, res) => {
   try {
     const { name, description } = req.body;
@@ -26,9 +24,7 @@ export const createFlashcardTopic = async (req, res) => {
   }
 };
 
-/**
- * GET all topics
- */
+
 export const getAllFlashcardTopics = async (req, res) => {
   try {
     const topics = await FlashcardTopic.find().sort({ createdAt: -1 });
@@ -38,9 +34,7 @@ export const getAllFlashcardTopics = async (req, res) => {
   }
 };
 
-/**
- * GET topic by id
- */
+
 export const getFlashcardTopicById = async (req, res) => {
   try {
     const topic = await FlashcardTopic.findById(req.params.id);
@@ -55,9 +49,7 @@ export const getFlashcardTopicById = async (req, res) => {
   }
 };
 
-/**
- * UPDATE topic
- */
+
 export const updateFlashcardTopic = async (req, res) => {
   try {
     const topic = await FlashcardTopic.findByIdAndUpdate(
@@ -76,9 +68,7 @@ export const updateFlashcardTopic = async (req, res) => {
   }
 };
 
-/**
- * DELETE topic (also delete its vocabularies)
- */
+
 export const deleteFlashcardTopic = async (req, res) => {
   try {
     const topicId = req.params.id;
@@ -89,10 +79,10 @@ export const deleteFlashcardTopic = async (req, res) => {
       return res.status(404).json({ message: "Topic not found" });
     }
 
-    // 🔥 XÓA TẤT CẢ vocabulary thuộc topic này
+    
     await Vocabulary.deleteMany({ topic: topicId });
 
-    // 🔥 Sau đó xóa topic
+    
     await FlashcardTopic.findByIdAndDelete(topicId);
 
     res.json({
@@ -130,7 +120,7 @@ export const createVocabulary = async (req, res) => {
       return res.status(404).json({ message: "Flashcard topic not found" });
     }
 
-    // ✅ Tạo pronunciation object đúng structure
+    
     const pronunciation = {
       us: { ipa: usIpa || "" },
       uk: { ipa: ukIpa || "" }
@@ -138,7 +128,7 @@ export const createVocabulary = async (req, res) => {
 
     let imageUrl = "";
 
-    // ✅ Nếu có upload image
+    
     if (req.file) {
       const uploadPromise = new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -155,7 +145,7 @@ export const createVocabulary = async (req, res) => {
       imageUrl = result.secure_url;
     }
 
-    // ✅ Tạo vocabulary
+    
     const vocabulary = await Vocabulary.create({
       word,
       definition,
@@ -185,9 +175,7 @@ export const createVocabulary = async (req, res) => {
   }
 };
 
-/**
- * GET all vocabularies
- */
+
 export const getAllVocabularies = async (req, res) => {
   try {
     const vocabularies = await Vocabulary.find()
@@ -202,9 +190,7 @@ export const getAllVocabularies = async (req, res) => {
   }
 };
 
-/**
- * GET vocabulary by ID
- */
+
 export const getVocabularyById = async (req, res) => {
   try {
     const vocabulary = await Vocabulary.findById(req.params.id)
@@ -220,9 +206,7 @@ export const getVocabularyById = async (req, res) => {
   }
 };
 
-/**
- * GET vocabularies by topic
- */
+
 export const getVocabularyByTopic = async (req, res) => {
   try {
     const vocabularies = await Vocabulary.find({
@@ -235,9 +219,7 @@ export const getVocabularyByTopic = async (req, res) => {
   }
 };
 
-/**
- * UPDATE vocabulary
- */
+
 export const updateVocabulary = async (req, res) => {
   try {
     const vocabulary = await Vocabulary.findById(req.params.id);
@@ -269,7 +251,7 @@ export const updateVocabulary = async (req, res) => {
 
     let imageUrl = vocabulary.imageUrl;
 
-    // ✅ Upload image nếu có
+    
     if (req.file) {
       const uploadPromise = new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -286,7 +268,7 @@ export const updateVocabulary = async (req, res) => {
       imageUrl = result.secure_url;
     }
 
-    // ✅ Update fields
+    //  Update fields
     vocabulary.word = word || vocabulary.word;
     vocabulary.definition = definition || vocabulary.definition;
     vocabulary.example = example || vocabulary.example;
@@ -294,7 +276,7 @@ export const updateVocabulary = async (req, res) => {
     vocabulary.topic = topic || vocabulary.topic;
     vocabulary.imageUrl = imageUrl;
 
-    // ✅ Update pronunciation đúng cách
+    //  Update pronunciation đúng cách
     if (usIpa !== undefined || ukIpa !== undefined) {
       vocabulary.pronunciation = {
         us: { ipa: usIpa || "" },
@@ -312,9 +294,7 @@ export const updateVocabulary = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-/**
- * DELETE vocabulary
- */
+
 export const deleteVocabulary = async (req, res) => {
   try {
     const vocabulary = await Vocabulary.findByIdAndDelete(req.params.id);

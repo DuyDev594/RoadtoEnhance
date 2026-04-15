@@ -1,8 +1,6 @@
 import { generateTopic, evaluateEssay } from "../../services/aiService.js";
 
-/**
- * Reset quota nếu sang ngày mới
- */
+
 function resetDaily(user) {
   const today = new Date().toDateString();
 
@@ -17,16 +15,13 @@ function resetDaily(user) {
   }
 }
 
-/**
- * Đếm số từ chuẩn
- */
+
 function countWords(text) {
   return text.trim().split(/\s+/).length;
 }
 
-/**
- * Validate AI response
- */
+//Validate AI response
+
 function validateAIResponse(data) {
   if (!data) return false;
 
@@ -37,39 +32,52 @@ function validateAIResponse(data) {
   return true;
 }
 
-/**
- * GET /topic
- */
+//GET /topic
+
 export const getTopic = async (req, res) => {
   try {
-    console.log("🔥 API HIT: /api/writing/topic");
+    console.log("API HIT: /api/writing/topic");
     const user = req.user;
 
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // đảm bảo structure tồn tại
+    
     user.aiWriting ||= {
       dailyCount: 0,
       retryCount: 0,
       lastUsed: new Date()
     };
 
+    user.aiWriting.currentTopic ||= null;
+    user.aiWriting.hasSubmitted ||= false;
+
     resetDaily(user);
 
-    
+    if (user.aiWriting.currentTopic && !user.aiWriting.hasSubmitted) {
+      return res.json({
+        topic: user.aiWriting.currentTopic,
+        aiWriting: user.aiWriting
+      });
+    }
 
+    // 🧠 CASE 2: chưa có topic hoặc đã submit → tạo mới
     const topic = await generateTopic(user.level);
+
+    // lưu topic mới
+    user.aiWriting.currentTopic = topic;
+    user.aiWriting.hasSubmitted = false;
 
     await user.save();
 
-    res.json({ topic,
+    res.json({
+      topic,
       aiWriting: user.aiWriting
-     });
+    });
 
   } catch (err) {
-    console.error("❌ getTopic error:", err);
+    console.error("getTopic error:", err);
 
     res.status(500).json({
       message: "Failed to generate topic"
@@ -77,12 +85,11 @@ export const getTopic = async (req, res) => {
   }
 };
 
-/**
- * POST /submit
- */
+//POST /submit
+ 
 export const submitEssay = async (req, res) => {
   try {
-    console.log("🔥 API HIT: /api/writing/submit");
+    console.log("API HIT: /api/writing/submit");
     const { essay } = req.body;
     const user = req.user;
 
@@ -90,15 +97,20 @@ export const submitEssay = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // đảm bảo structure tồn tại
+    
     user.aiWriting ||= {
       dailyCount: 0,
       retryCount: 0,
       lastUsed: new Date()
     };
 
+    user.aiWriting.currentTopic ||= null;
+    user.aiWriting.hasSubmitted ||= false;
+
     if (!essay || typeof essay !== "string") {
       return res.status(400).json({
+        success: false,
+        errorCode: "EMPTY_ESSAY",
         message: "Essay is required"
       });
     }
@@ -107,43 +119,102 @@ export const submitEssay = async (req, res) => {
 
     if (user.aiWriting.dailyCount >= 2) {
       return res.status(403).json({
+        success: false,
+        errorCode: "DAILY_LIMIT",
         message: "Daily limit reached (2 essays)"
       });
     }
 
     const wordCount = countWords(essay);
 
-    if (wordCount < 250 || wordCount > 350) {
+    if (wordCount < 200 || wordCount > 350) {
       return res.status(400).json({
-        message: "Essay must be between 250 and 350 words"
+        success: false,
+        errorCode: "WORD_LIMIT",
+        message: "Essay must be between 200 and 350 words"
       });
     }
 
-    // 🔥 NEW: đã là object (KHÔNG parse nữa)
+    
     const result = await evaluateEssay(user.level, essay);
 
-    // 🔍 validate response
+    // validate response
     if (!validateAIResponse(result)) {
-      console.error("❌ Invalid AI response:", result);
+      console.error("Invalid AI response:", result);
 
       return res.status(500).json({
         message: "AI response invalid structure"
       });
     }
 
-    // 🎯 tăng quota chỉ khi hợp lệ
+    
     user.aiWriting.dailyCount += 1;
     user.aiWriting.lastUsed = new Date();
+
+    // 🔥 QUAN TRỌNG
+    user.aiWriting.hasSubmitted = true;
+
+   
 
     await user.save();
 
     res.json({...result, aiWriting: user.aiWriting});
 
   } catch (err) {
-    console.error("❌ submitEssay error:", err);
+    console.error("submitEssay error:", err);
 
     res.status(500).json({
+      success: false,
+      errorCode: "AI_ERROR",
       message: "Failed to evaluate essay"
+    });
+  }
+};
+
+export const nextTopic = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    user.aiWriting ||= {
+      dailyCount: 0,
+      retryCount: 0,
+      lastUsed: new Date()
+    };
+
+    user.aiWriting.currentTopic ||= null;
+    user.aiWriting.hasSubmitted ||= false;
+
+    resetDaily(user);
+
+    if (user.aiWriting.dailyCount >= 2) {
+      return res.status(403).json({
+        success: false,
+        errorCode: "DAILY_LIMIT",
+        message: "Daily limit reached"
+      });
+    }
+
+    const topic = await generateTopic(user.level);
+
+    user.aiWriting.currentTopic = topic;
+    user.aiWriting.hasSubmitted = false;
+
+    await user.save();
+
+    res.json({
+      topic,
+      aiWriting: user.aiWriting
+    });
+
+  } catch (err) {
+    console.error("nextTopic error:", err);
+
+    res.status(500).json({
+      message: "Failed to generate next topic"
     });
   }
 };

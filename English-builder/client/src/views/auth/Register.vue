@@ -16,11 +16,11 @@
               id="username"
               type="text"
               required
-              placeholder="Username"
+              placeholder="User name"
               class="w-full h-10 text-white placeholder-transparent transition-all bg-transparent border-b-2 border-blue-200 peer focus:outline-none focus:border-white"
             />
             <label for="username" class="absolute left-0 -top-3.5 text-blue-200 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-blue-100 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-white peer-focus:text-sm">
-              Username
+              User name
             </label>
           </div>
 

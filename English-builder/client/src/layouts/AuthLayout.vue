@@ -5,7 +5,7 @@
     <Navbar v-if="!route.meta.hideLayout" />
 
     <!-- MAIN -->
-    <main class="p-6 text-gray-900 dark:text-gray-100 flex-1">
+    <main class="flex-1 px-6 py-8 text-gray-900 dark:text-gray-100">
       <router-view />
     </main>
 

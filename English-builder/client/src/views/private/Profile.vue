@@ -12,18 +12,18 @@
             class="w-28 h-28 rounded-full mx-auto mb-4 border"
           />
 
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
             {{ user.username }}
           </h2>
 
-          <p class="text-gray-500 dark:text-gray-400 text-sm">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
             {{ user.email }}
           </p>
 
           <!-- Level -->
           <div class="mt-4">
 
-            <p class="text-sm text-gray-700 dark:text-gray-300">
+            <p class="text-base text-gray-700 dark:text-gray-300">
               <b>Level:</b>
               <span v-if="user.level">{{ user.level }}</span>
               <span v-else class="text-gray-400 dark:text-gray-500">
@@ -31,7 +31,7 @@
               </span>
             </p>
 
-            <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
+            <p class="mt-2 text-base text-gray-700 dark:text-gray-300">
               <b>Status:</b>
 
               <span
@@ -67,7 +67,7 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
 
-          <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
             Learning Activity
           </h2>
 

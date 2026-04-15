@@ -17,7 +17,7 @@ export const getTopicsForUser = async (req, res) => {
         const currentLevel = user.level;
         const nextLevel = getNextLevel(currentLevel);
 
-        // 1. Lấy topics
+        
         const topics = await Topic.find({
             level: { $in: [currentLevel, nextLevel] },
             isPublished: true
@@ -26,7 +26,7 @@ export const getTopicsForUser = async (req, res) => {
         let currentTopics = [];
         let nextTopics = [];
 
-        // 2. Tính progress từng topic
+        
         for (let topic of topics) {
 
             const lessons = await Lesson.find({
@@ -58,10 +58,10 @@ export const getTopicsForUser = async (req, res) => {
             }
         }
 
-        // 3. Tính unlock level
+        
         const currentTopicIds = currentTopics.map(t => t._id.toString());
 
-            // Lấy tất cả lesson thuộc current level
+            
             const allLessonsCurrentLevel = await Lesson.find({
                 topicId: { $in: currentTopicIds },
                 isPublished: true
@@ -69,18 +69,18 @@ export const getTopicsForUser = async (req, res) => {
 
             const allLessonIds = allLessonsCurrentLevel.map(l => l._id.toString());
 
-            // Lọc lesson đã completed
+            
             const completedLessons = lessonProgress.filter(lp =>
                 allLessonIds.includes(lp.lessonId?.toString()) &&
                 lp.status === "completed"
             );
 
-            // % hoàn thành
+            
             const levelProgress = allLessonsCurrentLevel.length === 0
                 ? 0
                 : completedLessons.length / allLessonsCurrentLevel.length;
 
-            // Unlock
+            
             const unlockNextLevel = levelProgress >= 0.8;
 
         res.json({
@@ -149,10 +149,10 @@ export const updateLessonProgress = async (req, res) => {
         const user = await User.findById(req.user.id);
         const lessonId = req.params.id;
         
-        // Nhận trực tiếp score từ FE gửi lên
+        
         const { score } = req.body; 
         
-        // Kiểm tra logic status
+        
         const status = score >= 80 ? "completed" : "in_progress";
 
         if (!user.lessonProgress) user.lessonProgress = [];
@@ -178,11 +178,11 @@ export const updateLessonProgress = async (req, res) => {
 
         await user.save();
 
-        // QUAN TRỌNG: Trả về toàn bộ lessonProgress mới để FE update Store
+        
         res.json({ 
             message: status === "completed" ? "Lesson passed!" : "Score too low!",
             status,
-            lessonProgress: user.lessonProgress // Thêm dòng này
+            lessonProgress: user.lessonProgress 
         });
     } catch (err) {
         console.error("Update error:", err);

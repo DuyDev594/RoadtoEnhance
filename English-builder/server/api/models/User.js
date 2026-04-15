@@ -60,7 +60,9 @@ lastPlacementTestAt: {
 aiWriting: {
   dailyCount: { type: Number, default: 0 },
   lastUsed: { type: Date, default: null },
-  retryCount: { type: Number, default: 0 }
+  retryCount: { type: Number, default: 0 },
+  currentTopic: { type: String, default: null },
+  hasSubmitted: { type: Boolean, default: false }
 }
 },
 {

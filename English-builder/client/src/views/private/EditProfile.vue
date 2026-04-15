@@ -1,6 +1,6 @@
 <template>
     <div class="p-6 max-w-2xl mx-auto">
-        <h1 class="text-2xl font-bold mb-6">Edit Profile</h1>
+        <h1 class="text-4xl font-bold mb-6">Edit Profile</h1>
 
         <div class="bg-white p-6 rounded shadow space-y-4">
 
@@ -17,39 +17,39 @@
 
         <!-- Username -->
         <div>
-            <label class="block font-semibold mb-1">
-            Username
+            <label class="block font-semibold text-base mb-1">
+            User name
             </label>
             <input
             v-model="form.username"
-            class="w-full border p-2 rounded"
+            class="w-full border px-3 py-2 rounded text-base"
             placeholder="Enter your name"
             />
         </div>
 
         <!-- Email (readonly) -->
         <div>
-            <label class="block font-semibold mb-1">
+            <label class="block font-semibold text-base mb-1">
             Email
             </label>
             <input
             :value="user.email"
             disabled
-            class="w-full border p-2 rounded bg-gray-100 cursor-not-allowed"
+            class="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed text-base"
             />
         </div>
 
         <!-- Actions -->
         <div class="flex justify-end gap-3 pt-4">
             <button
-            class="px-4 py-2 border rounded"
+            class="px-4 py-2 border rounded text-base"
             @click="goBack"
             >
             Cancel
             </button>
 
             <button
-            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-base"
             @click="saveProfile"
             >
             Save changes
@@ -58,7 +58,7 @@
 
         <p
             v-if="success"
-            class="text-green-600 text-sm"
+            class="text-green-600 text-base"
         >
             Profile updated successfully
         </p>

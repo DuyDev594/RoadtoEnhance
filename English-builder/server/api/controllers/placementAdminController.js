@@ -106,14 +106,14 @@ export const createQuestion = async (req, res) => {
             passageId
         } = req.body;
 
-        // Validate chung
+        
         if (!testSetId || !skill || !questionText || !options || !correctAnswer) {
             return res.status(400).json({
                 message: "Missing required fields"
             });
         }
 
-        // Validate riêng cho reading
+        
         if (skill === "reading") {
             if (!passageId) {
                 return res.status(400).json({

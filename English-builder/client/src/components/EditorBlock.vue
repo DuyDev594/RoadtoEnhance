@@ -21,6 +21,8 @@ import LinkTool from "@editorjs/link"
 import ColorPlugin from "editorjs-text-color-plugin"
 import AlignmentTuneTool from "editorjs-text-alignment-blocktune"
 
+const emit = defineEmits(["update:text"]);
+
 const props = defineProps({
   modelValue: {
     type: Object,
@@ -41,6 +43,12 @@ onMounted(() => {
     autofocus: true,
 
     data: props.modelValue || {},
+    
+    onChange: async () => {
+      const text = await extractText();
+      emit("update:text", text);
+    },
+
 
     tools: {
       
@@ -130,6 +138,23 @@ onBeforeUnmount(async () => {
   }
 
 })
+
+const extractText = async () => {
+  if (!editor) return "";
+
+  try {
+    const content = await editor.save();
+
+    return content.blocks
+      .map(b => b.data.text || "")
+      .join(" ")
+      .trim();
+
+  } catch (err) {
+    console.error("Extract text error:", err);
+    return "";
+  }
+};
 
 const saveContent = async () => {
 

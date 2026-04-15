@@ -4,7 +4,7 @@
 
     <!-- ===== TOPIC LIST ===== -->
     <div v-if="!selectedTopic">
-      <h1 class="text-2xl font-bold mb-6">Flashcard Topics</h1>
+      <h1 class="text-4xl font-bold mb-6">Flashcard Topics</h1>
       
       <div
         @click="startReview"
@@ -14,7 +14,7 @@
           Review Learned Words
         </h2>
 
-        <p class="text-sm opacity-80">
+        <p class="text-base opacity-80">
           Practice vocabulary you already learned
         </p>
       </div>
@@ -30,13 +30,15 @@
             {{ topic.name }}
             </h2>
 
-            <div class="text-sm mt-2">
+            <div class="text-base mt-2">
 
               <span v-if="topic.completed" class="text-green-500">
-                ✓ Completed
+                <font-awesome-icon icon="check" class="mr-1" />
+                Completed
               </span>
 
               <span v-else-if="topic.learnedCount > 0 || topic.reviewCount > 0" class="text-yellow-500">
+                <font-awesome-icon icon="clock" class="mr-1" />
                 In Progress
               </span>
 
@@ -46,7 +48,7 @@
 
           </div>
 
-          <p class="text-sm text-gray-500">
+          <p class="text-base text-gray-500 mt-2">
             {{ topic.description }}
           </p>
         </div>
@@ -126,8 +128,8 @@ const loadTopics = async () => {
 
 const handleCompleted = async () => {
 
-  await loadTopics()       // reload topics từ backend
-  selectedTopic.value = null   // quay lại topic list
+  await loadTopics()       
+  selectedTopic.value = null   
 
 }
 

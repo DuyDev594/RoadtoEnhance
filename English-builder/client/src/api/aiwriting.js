@@ -7,3 +7,7 @@ export const getTopic = () => {
 export const submitEssay = (essay) => {
   return api.post("/writing/submit", { essay });
 };
+
+export const nextTopic = () => {
+  return api.get("/writing/next-topic");
+};

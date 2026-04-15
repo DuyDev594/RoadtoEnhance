@@ -1,6 +1,6 @@
 <template>
     <div class="p-6">
-        <h1 class="text-2xl font-bold mb-6">Manage Users</h1>
+        <h1 class="text-4xl font-bold mb-6">Manage Users</h1>
 
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
@@ -9,6 +9,7 @@
                 <button
                     @click="activeTab = 'user'"
                     :class="tabClass('user')"
+                    class="text-base"
                     title="User tab"
                     >
                     <font-awesome-icon icon="user" class="mr-2" />
@@ -28,7 +29,7 @@
             <!-- Add user -->
             <button
                 @click="showModal = true"
-                class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition"
+                class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition text-base"
                 title="Add new user"
             >
                 
@@ -48,7 +49,7 @@
                 <input
                 v-model="filters.keyword"
                 placeholder="Search ..."
-                class="pl-10 pr-3 py-2 w-full border rounded-lg"
+                class="pl-10 pr-3 py-2 w-full border rounded-lg text-base"
                 />
             </div>
 
@@ -57,7 +58,7 @@
                 v-if="activeTab === 'user'"
                 v-model="filters.level"
                 @change="fetchUsers"
-                class="px-3 py-2 border rounded-lg"
+                class="px-3 py-2 border rounded-lg text-base"
             >
                 <option value="">All Levels</option>
                 <option value="A1">A1</option>
@@ -71,7 +72,7 @@
             <select
                 v-model="filters.sort"
                 @change="fetchUsers"
-                class="px-3 py-2 border rounded-lg"
+                class="px-3 py-2 border rounded-lg text-base"
             >
                 <option value="">Sort</option>
                 <option value="newest">Newest</option>
@@ -94,8 +95,8 @@
                     <font-awesome-icon icon="user-plus" class="text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">Add New User</h2>
-                    <p class="text-xs text-gray-500">Create a new account for your platform</p>
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Add New User</h2>
+                    <p class="text-sm text-gray-500">Create a new account for your platform</p>
                     </div>
                 </div>
                 <button @click="showModal = false" class="text-gray-400 hover:text-gray-600 transition-colors">
@@ -105,7 +106,7 @@
 
                 <div class="p-6 space-y-5">
                 <div class="space-y-1">
-                    <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Username</label>
+                    <label class="text-base font-semibold text-gray-700 dark:text-gray-300 ml-1">Username</label>
                     <div class="relative">
                     <input 
                         v-model="form.username" 
@@ -113,40 +114,40 @@
                         placeholder="e.g. johndoe" 
                         class="w-full pl-4 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-800 dark:text-white"
                     />
-                    <p v-if="errors.username" class="text-red-500 text-sm mt-1">
+                    <p v-if="errors.username" class="text-red-500 text-base mt-1">
                         {{ errors.username }}
                         </p>
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Email Address</label>
+                    <label class="text-base font-semibold text-gray-700 dark:text-gray-300 ml-1">Email Address</label>
                     <input 
                     v-model="form.email" 
                     type="email"
                     placeholder="name@example.com" 
                     class="w-full pl-4 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-800 dark:text-white"
                     />
-                    <p v-if="errors.email" class="text-red-500 text-sm mt-1">
+                    <p v-if="errors.email" class="text-red-500 text-base mt-1">
                         {{ errors.email }}
                         </p>
                 </div>
 
                 <div class="space-y-1">
-                    <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Password</label>
+                    <label class="text-base font-semibold text-gray-700 dark:text-gray-300 ml-1">Password</label>
                     <input 
                     v-model="form.password" 
                     type="password"
                     placeholder="••••••••" 
                     class="w-full pl-4 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-800 dark:text-white"
                     />
-                    <p v-if="errors.password" class="text-red-500 text-sm mt-1">
+                    <p v-if="errors.password" class="text-red-500 text-base mt-1">
                         {{ errors.password }}
                         </p>
                 </div>
 
                 <div class="space-y-1">
-                    <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">User Role</label>
+                    <label class="text-base font-semibold text-gray-700 dark:text-gray-300 ml-1">User Role</label>
                     <select 
                     v-model="form.role" 
                     class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none text-gray-800 dark:text-white"
@@ -190,8 +191,8 @@
                     <font-awesome-icon icon="user-pen" class="text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">Edit User</h2>
-                    <p class="text-xs text-gray-500">Update account information and permissions</p>
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Edit User</h2>
+                    <p class="text-sm text-gray-500">Update account information and permissions</p>
                     </div>
                 </div>
                 <button @click="showEditModal = false" class="text-gray-400 hover:text-gray-600 transition-colors">
@@ -201,7 +202,7 @@
 
                 <div class="p-6 space-y-4">
                 <div class="space-y-1">
-                    <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Username</label>
+                    <label class="text-base font-semibold text-gray-700 dark:text-gray-300 ml-1">Username</label>
                     <input 
                     v-model="editForm.username" 
                     type="text"
@@ -264,12 +265,12 @@
         <table class="w-full">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="p-3 w-40">Username</th>
-                    <th class="p-3 w-64">Email</th>
-                    <th class="p-3 w-32">Role</th>
-                    <th v-if="activeTab === 'user'" class="p-3 w-24">Level</th>
-                    <th class="p-3 w-32">Created At</th>
-                    <th class="p-3 w-32 text-center">Actions</th>
+                    <th class="p-3 w-40 text-sm font-semibold">Username</th>
+                    <th class="p-3 w-40 text-sm font-semibold">Email</th>
+                    <th class="p-3 w-32 text-sm font-semibold">Role</th>
+                    <th v-if="activeTab === 'user'" class="p-3 w-24 text-sm font-semibold">Level</th>
+                    <th class="p-3 w-32 text-sm font-semibold">Created At</th>
+                    <th class="p-3 w-32 text-sm font-semibold text-center">Actions</th>
                 </tr>
             </thead>
 
@@ -279,13 +280,13 @@
                 :key="user._id"
                 class="border-t"
             >
-                <td class="p-3 ">{{ user.username }}</td>
-                <td class="p-3">{{ user.email }}</td>
-                <td class="p-3 capitalize">{{ user.role }}</td>
+                <td class="p-3 text-base ">{{ user.username }}</td>
+                <td class="p-3 text-base">{{ user.email }}</td>
+                <td class="p-3 text-base capitalize">{{ user.role }}</td>
                 <td 
                     v-if="activeTab === 'user'"
-                    class="p-3">{{ user.level || "-" }}</td>
-                <td class="p-3">{{ new Date(user.createdAt).toLocaleDateString() }}</td>
+                    class="p-3 text-base">{{ user.level || "-" }}</td>
+                <td class="p-3 text-base">{{ new Date(user.createdAt).toLocaleDateString() }}</td>
                 <td class="p-3 flex justify-center gap-4">
                     <button
                         @click="openEdit(user)"

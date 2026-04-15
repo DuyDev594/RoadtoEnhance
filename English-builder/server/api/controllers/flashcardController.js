@@ -9,7 +9,7 @@ function shuffle(array) {
   return [...array].sort(() => Math.random() - 0.5);
 }
 
-/* ================= GET TOPICS ================= */
+//GET TOPICS
 
 export const getTopics = async (req, res) => {
   try {
@@ -56,7 +56,7 @@ export const getTopics = async (req, res) => {
   }
 };
 
-/* ================= FIT VOCAB ================= */
+
 
 export const getFitVocabularies = async (req, res) => {
   try {
@@ -89,7 +89,7 @@ export const getFitVocabularies = async (req, res) => {
   }
 };
 
-/* ================= ADVANCED VOCAB ================= */
+
 
 export const getAdvancedVocabularies = async (req, res) => {
   try {
@@ -122,7 +122,7 @@ export const getAdvancedVocabularies = async (req, res) => {
   }
 };
 
-/* ================= MARK PROGRESS ================= */
+
 
 export const markVocabularyLearned = async (req, res) => {
   try {
@@ -170,7 +170,7 @@ export const markVocabularyLearned = async (req, res) => {
   }
 };
 
-/* ================= REVIEW ================= */
+
 
 export const getReviewVocabularies = async (req, res) => {
   try {

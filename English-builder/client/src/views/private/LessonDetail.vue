@@ -12,19 +12,20 @@
         </button>
         <div>
           <div class="flex items-center gap-2 mb-0.5">
-            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase tracking-wider">
+            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded uppercase tracking-wider">
               {{ lesson.type }}
             </span>
-            <h1 class="text-xl font-black text-slate-800 tracking-tight">{{ lesson.title }}</h1>
+            <h1 class="text-2xl font-bold text-slate-800 tracking-tight">{{ lesson.title }}</h1>
           </div>
-          <p class="text-slate-500 text-xs font-medium">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+             {{ lesson.description }}
             {{ lesson.topicId?.title || 'General English' }} • Unit {{ lesson.order || 1 }}
           </p>
         </div>
       </div>
       
-      <div v-if="isCompleted" class="flex items-center text-emerald-600 font-bold bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100 text-sm">
-        <span class="mr-2">✓</span> Course Completed
+      <div v-if="isCompleted" class="flex items-center text-emerald-600 font-semibold bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100 text-sm">
+        <span class="mr-2"> <font-awesome-icon icon="check" /> </span> Course Completed
       </div>
     </div>
 
@@ -42,15 +43,15 @@
               :trigger="triggerPlay"  
               @segment-end="onSegmentEnd"
             />
-            <div v-else class="w-full h-full flex items-center justify-center text-slate-500 text-sm italic">
+            <div v-else class="w-full h-full flex items-center justify-center text-base text-slate-500 italic">
               No Video Content Available
             </div>
           </div>
           <div class="p-5 bg-gradient-to-br from-slate-50 to-white">
              <h4 class="text-slate-700 font-bold text-sm mb-2 flex items-center gap-2">
-               <span class="text-blue-500">ℹ️</span> Lesson Guide
+               <span class="text-blue-500"><font-awesome-icon icon="circle-info" /></span> Lesson Guide
              </h4>
-             <p class="text-slate-500 text-xs leading-relaxed">
+             <p class="text-base text-slate-500 leading-relaxe">
                Watch the video and complete the dictation in the center panel. Use keyboard shortcuts for faster navigation.
              </p>
           </div>
@@ -65,14 +66,14 @@
                 'flex-1 flex items-center justify-center py-3 rounded-2xl font-bold text-sm transition-all',
                 activeTab === 'study' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-white/50'
               ]">
-              <span class="mr-2">🎧</span> Practice Lab
+              <span class="mr-2"><font-awesome-icon icon="headphones" /></span> Practice Lab
             </button>
             <button @click="activeTab = 'review'" 
               :class="[
                 'flex-1 flex items-center justify-center py-3 rounded-2xl font-bold text-sm transition-all',
                 activeTab === 'review' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-white/50'
               ]">
-              <span class="mr-2">📝</span> Final Exam
+              <span class="mr-2"><font-awesome-icon icon="file" /></span> Final Exam
             </button>
           </div>
 
@@ -87,10 +88,10 @@
 
                   <div v-else class="space-y-6">
                     <div class="flex items-center justify-between border-b border-slate-50 pb-4">
-                      <h3 class="font-black text-lg text-slate-800 tracking-tight">Active Dictation</h3>
+                      <h3 class="text-lg font-semibold text-slate-800">Active Dictation</h3>
                       <div class="flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full">
                         <span class="flex h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-                        <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">
+                        <span class="text-sm font-medium text-blue-600">
                           Seg {{ currentSegIdx + 1 }} / {{ lesson.segments?.length }}
                         </span>
                       </div>
@@ -110,8 +111,8 @@
 
                 <div v-else>
                   <div class="mb-6">
-                    <h3 class="font-black text-lg text-slate-800 tracking-tight">Mastery Check</h3>
-                    <p class="text-slate-400 text-xs mt-1">Complete this assessment to unlock the next lesson.</p>
+                    <h3 class="text-lg font-semibold text-slate-800">Mastery Check</h3>
+                    <p class="text-sm text-slate-400 mt-1">Complete this assessment to unlock the next lesson.</p>
                   </div>
                   <LessonReview 
                     v-if="lesson.review"
@@ -128,8 +129,8 @@
 
       <div class="lg:col-span-3 sticky top-6">
         <div class="flex items-center justify-between mb-4 px-2">
-          <h3 class="font-black text-slate-700 uppercase text-[10px] tracking-[0.2em]">Playlist Progress</h3>
-          <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+          <h3 class="text-sm font-semibold text-slate-700 uppercase tracking-wider">Playlist Progress</h3>
+          <span class="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
             {{ completedSegs.length }}/{{ lesson.segments?.length }} Done
           </span>
         </div>
@@ -153,8 +154,8 @@
             </div>
             
             <div class="flex-1 min-w-0">
-              <p class="text-xs font-bold truncate">Segment {{ idx + 1 }}</p>
-              <p :class="['text-[9px] font-medium mt-0.5', currentSegIdx === idx ? 'text-blue-100' : 'text-slate-400']">
+              <p class="text-sm font-semibold">Segment {{ idx + 1 }}</p>
+              <p :class="['text-sm text-slate-400', currentSegIdx === idx ? 'text-blue-100' : 'text-slate-400']">
                 Duration: {{ Math.round(seg.end - seg.start) }}s
               </p>
             </div>
@@ -171,9 +172,10 @@
 
         <div class="mt-4 p-5 bg-amber-50 rounded-[1.5rem] border border-amber-100 shadow-sm">
           <h4 class="text-amber-800 font-bold text-xs flex items-center gap-2 mb-2">
-              <span>💡</span> Tip
+              <font-awesome-icon icon="lightbulb" class="text-amber-500" />
+              Tip
           </h4>
-          <p class="text-amber-700/80 text-[11px] leading-relaxed">
+          <p class="text-base text-amber-700">
             Listen to the video multiple times before typing.
           </p>
         </div>
@@ -187,7 +189,7 @@
         <div class="absolute inset-0 rounded-full border-4 border-slate-100"></div>
         <div class="absolute inset-0 rounded-full border-4 border-blue-600 border-t-transparent animate-spin"></div>
       </div>
-      <p class="mt-4 font-bold text-slate-400 animate-pulse tracking-widest text-[10px] uppercase">Initializing Lab...</p>
+      <p class="mt-4 text-base font-semibold text-slate-400">Initializing Lab...</p>
   </div>
 </template>
 

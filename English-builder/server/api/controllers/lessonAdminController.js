@@ -22,7 +22,7 @@ export const createTopic = async (req, res) => {
             });
         }
 
-        // tìm order lớn nhất trong cùng level
+        
         const lastTopic = await Topic.findOne({ level })
         .sort({ order: -1 });
 
@@ -42,7 +42,7 @@ export const createTopic = async (req, res) => {
     }
 };
 
-// GET all topics (admin)
+
 export const getAllTopics = async (req, res) => {
     try {
         const levelOrder = ["A1", "A2", "B1", "B2", "C1"];
@@ -65,7 +65,7 @@ export const updateTopic = async (req, res) => {
 
         const errors = {};
 
-        // CHỈ validate khi có gửi lên
+        
         if (title !== undefined && !title) {
             errors.title = "Title is required";
         }
@@ -83,7 +83,7 @@ export const updateTopic = async (req, res) => {
 
         const topic = await Topic.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body }, // 🔥 đảm bảo chỉ update field gửi lên
+            { $set: req.body }, 
             { new: true }
         );
 
@@ -199,7 +199,7 @@ export const publishLesson = async (req, res) => {
 
 export const updateVideoInfo = async (req, res) => {
     try {
-        // Kiểm tra an toàn để tránh lỗi 500 do match()
+        
         const videoIdInput = req.body.videoId || ""; 
         
         const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -209,7 +209,7 @@ export const updateVideoInfo = async (req, res) => {
         const lesson = await Lesson.findById(req.params.id);
         if (!lesson) return res.status(404).json({ message: "Lesson not found" });
 
-        // Cập nhật theo đúng cấu trúc Schema
+        
         lesson.video = { 
             provider: "youtube", 
             videoId: videoId 
@@ -300,11 +300,10 @@ export const updateGrammar = async (req, res) => {
         const lesson = await Lesson.findById(req.params.id);
         if (!lesson) return res.status(404).json({ message: "Lesson not found" });
 
-        // Lấy dữ liệu từ FE (FE sẽ gửi { explanation: "..." })
+        
         const { explanation } = req.body;
 
-        // FIX LỖI "Cannot create field": 
-        // Nếu grammar cũ đang là Array, ta ép nó về Object rỗng trước khi gán
+        
         if (Array.isArray(lesson.grammar)) {
             lesson.grammar = { explanation: "" };
         }

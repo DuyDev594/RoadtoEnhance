@@ -63,11 +63,11 @@
           <p class="text-gray-500 dark:text-gray-400 mt-3">Everything you need to master English in one place</p>
         </div>
         
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="(feature, index) in features" :key="index" 
             class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:-translate-y-2 transition-all duration-300">
             <div class="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-3xl mb-6">
-              {{ feature.icon }}
+              <font-awesome-icon :icon="feature.icon" />
             </div>
             <h3 class="font-bold text-xl text-gray-800 dark:text-gray-100 mb-3">{{ feature.title }}</h3>
             <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">{{ feature.desc }}</p>
@@ -114,22 +114,18 @@ const stats = [
 
 const features = [
     {
-        icon: '📚',
+        icon: 'book',
         title: 'Interactive Lessons',
         desc: 'Engaging multimedia content, quizzes, and real-life scenarios designed for effective learning.'
     },
     {
-        icon: '🎯',
+        icon: 'bullseye',
         title: 'Personalized Paths',
         desc: 'Tailored learning journeys based on your proficiency level and specific language goals.'
     },
+    
     {
-        icon: '👥',
-        title: 'Community Support',
-        desc: 'Join a global network of learners to share experiences, ask questions, and grow together.'
-    },
-    {
-        icon: '📈',
+        icon: 'chart-line',
         title: 'Progress Tracking',
         desc: 'Stay motivated with a built-in system that visualizes your improvement over time.'
     }

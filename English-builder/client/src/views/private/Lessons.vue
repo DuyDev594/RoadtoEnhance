@@ -2,10 +2,10 @@
     <div class="min-h-screen px-6 py-10 bg-gray-100 dark:bg-gray-900">
         <!-- Header -->
         <div class="mb-10 text-center">
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
+        <h1 class="text-4xl font-bold text-gray-800 dark:text-white">
             Your Learning Topics
         </h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-300">
+        <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
             Topics are selected based on your current level
         </p>
         </div>
@@ -14,10 +14,10 @@
             class="mt-10 text-center"
         >
             <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg max-w-md mx-auto">
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
                     You need to take the Placement Test
                 </h2>
-                <p class="text-gray-600 dark:text-gray-300 mb-6">
+                <p class="text-base text-gray-600 dark:text-gray-400 mb-6">
                     We need to determine your English level before showing lessons.
                 </p>
                 <button
@@ -30,19 +30,19 @@
         </div>
 
         <!-- Loading -->
-        <div v-if="lessonStore.loading" class="text-center text-gray-500">
+        <div v-if="lessonStore.loading" class="text-center text-base text-gray-500">
         Loading topics...
         </div>
 
         <!-- Error -->
-        <div v-if="lessonStore.error" class="text-center text-red-500 font-medium">
+        <div v-if="lessonStore.error" class="text-center text-base font-medium text-red-500">
         {{ lessonStore.error }}
         </div>
 
         <!-- Topics -->
         <!-- CURRENT LEVEL -->
         <div v-if="lessonStore.currentTopics.length">
-            <h2 class="text-xl font-bold mb-4 text-green-600">
+            <h2 class="text-2xl font-semibold mb-4 text-green-600">
                 Current Level: {{ lessonStore.currentLevel }}
             </h2>
 
@@ -58,7 +58,7 @@
 
         <!-- NEXT LEVEL -->
         <div v-if="lessonStore.nextTopics.length" class="mt-10">
-            <h2 class="text-xl font-bold mb-4 text-gray-500">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-500">
                 Next Level: {{ lessonStore.nextLevel }}
             </h2>
 
@@ -80,7 +80,7 @@
             lessonStore.currentTopics.length === 0 &&
             lessonStore.nextTopics.length === 0
             "
-            class="text-center text-gray-500"
+            class="text-center text-base text-gray-500"
             >
             No topics available for your level yet.
         </div>

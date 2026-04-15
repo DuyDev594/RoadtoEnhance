@@ -3,7 +3,7 @@
 <!-- ================= LOADING ================= -->
 <div
     v-if="!test && !authStore.user?.hasTakenPlacementTest"
-    class="text-center py-10"
+    class="text-center py-10 text-base text-gray-500"
     >
     Loading placement test...
 </div>
@@ -13,11 +13,11 @@
     v-else-if="result"
     class="max-w-4xl mx-auto mt-10 p-6 bg-green-50 border rounded"
     >
-    <h2 class="text-2xl font-bold mb-4">
+    <h2 class="text-2xl font-semibold mb-4">
         Your English Level: {{ result.assignedLevel }}
     </h2>
 
-    <h3 class="font-semibold mb-2">Performance by Level</h3>
+    <h3 class="text-lg font-semibold mb-2">Performance by Level</h3>
 
     <div class="space-y-2">
         <div
@@ -25,8 +25,8 @@
         :key="level"
         class="flex justify-between bg-white p-3 rounded border"
         >
-        <span class="font-medium">{{ level }}</span>
-        <span>{{ data.correct }} / {{ data.total }}</span>
+        <span class="text-base font-medium">{{ level }}</span>
+        <span class="text-base">{{ data.correct }} / {{ data.total }}</span>
         </div>
     </div>
     <button
@@ -43,14 +43,14 @@
     v-else-if="test"
     class="max-w-4xl mx-auto p-6"
     >
-    <h1 class="text-3xl font-bold mb-6">Placement Test</h1>
+    <h1 class="text-4xl font-bold mb-6 text-center">Placement Test</h1>
 
     <!-- STEP INDICATOR -->
     <div class="flex justify-between mb-8">
         <div
         v-for="(label, index) in steps"
         :key="label"
-        class="flex-1 text-center pb-2 border-b-2"
+        class="flex-1 text-center pb-2 border-b-2 text-sm"
         :class="step === index + 1
             ? 'border-blue-600 font-bold'
             : 'border-gray-300 text-gray-400'"
@@ -68,20 +68,20 @@
         :key="passage._id"
         class="mb-8 border rounded p-4"
         >
-        <h3 class="font-bold mb-2">{{ passage.title }}</h3>
-        <p class="mb-4 whitespace-pre-line">{{ passage.passageText }}</p>
+        <h3 class="text-lg font-semibold mb-2">{{ passage.title }}</h3>
+        <p class="mb-4 text-base whitespace-pre-line">{{ passage.passageText }}</p>
 
         <div
             v-for="(q, rIndex) in passage.questions"
             :key="q._id"
             class="mb-4"
         >
-            <p class="font-medium mb-2">Question {{ rIndex + 1 }} : {{ q.questionText }}</p>
+            <p class="text-base font-medium mb-2">Question {{ rIndex + 1 }} : {{ q.questionText }}</p>
 
             <label
             v-for="opt in q.options"
             :key="opt"
-            class="flex items-center gap-2 mb-1 cursor-pointer"
+            class="flex items-center gap-2 mb-1 cursor-pointer text-base"
             >
             <input
                 type="radio"
@@ -105,12 +105,12 @@
         :key="q._id"
         class="mb-6 border rounded p-4"
         >
-        <p class="font-medium mb-2">Question {{ vIndex + 1 }} : {{ q.questionText }}</p>
+        <p class="text-base font-medium mb-2">Question {{ vIndex + 1 }} : {{ q.questionText }}</p>
 
         <label
             v-for="opt in q.options"
             :key="opt"
-            class="flex items-center gap-2 mb-1 cursor-pointer"
+            class="flex items-center gap-2 mb-1 cursor-pointer text-base"
         >
             <input
             type="radio"
@@ -133,12 +133,12 @@
         :key="q._id"
         class="mb-6 border rounded p-4"
         >
-        <p class="font-medium mb-2">Question {{ gIndex + 1 }}: {{ q.questionText }}</p>
+        <p class="text-base font-medium mb-2">Question {{ gIndex + 1 }}: {{ q.questionText }}</p>
 
         <label
             v-for="opt in q.options"
             :key="opt"
-            class="flex items-center gap-2 mb-1 cursor-pointer"
+            class="flex items-center gap-2 mb-1 cursor-pointer text-base"
         >
             <input
             type="radio"
@@ -156,7 +156,7 @@
     <div class="flex justify-between mt-8">
         <button
         v-if="step > 1"
-        class="px-6 py-2 border rounded"
+        class="px-6 py-2 border rounded text-base"
         @click="step--"
         >
         Back
@@ -164,7 +164,7 @@
 
         <button
         v-if="step < 3"
-        class="ml-auto px-6 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        class="ml-auto px-6 py-2 bg-blue-600 text-white rounded text-base disabled:opacity-50"
         :disabled="!canProceedStep(step)"
         @click="step++"
         >
@@ -173,7 +173,7 @@
 
         <button
         v-if="step === 3"
-        class="ml-auto px-6 py-2 bg-green-600 text-white rounded disabled:opacity-50"
+        class="ml-auto px-6 py-2 bg-green-600 text-white rounded text-base disabled:opacity-500"
         :disabled="submitting || !canSubmit"
         @click="handleSubmit"
         >
@@ -188,33 +188,33 @@
   v-else
   class="max-w-3xl mx-auto mt-10 p-6 bg-blue-50 border rounded"
 >
-  <h2 class="text-2xl font-bold mb-4">Placement Test Completed</h2>
+  <h2 class="text-2xl font-semibold mb-4">Placement Test Completed</h2>
 
-  <p>Your English level:</p>
+  <p class="text-base">Your English level:</p>
   <p class="text-4xl font-bold text-blue-600 mt-2">
     {{ authStore.user.level }}
   </p>
 
-  <!-- 🔥 REASON BLOCK -->
+  <!-- REASON BLOCK -->
   <div v-if="retakeInfo" class="mt-6 bg-white p-4 rounded border space-y-2">
 
-    <p class="font-semibold text-red-500">
+    <p class="text-base font-semibold text-red-500">
       You cannot retake the test yet.
     </p>
 
-    <p>
+    <p class="text-base">
       📚 Completed Lessons:
       <strong>{{ retakeInfo.completedLessons }} / 5</strong>
     </p>
 
-    <p>
+    <p class="text-base">
       ⏳ Remaining Time:
       <strong>
         {{ Math.ceil(retakeInfo.remainingTime / (1000*60*60*24)) }} days
       </strong>
     </p>
 
-    <p class="text-gray-600">
+    <p class="text-base text-gray-600">
       You can retake the placement test after:
       <br />
       • Completing at least <strong>5 lessons</strong>
@@ -222,7 +222,7 @@
       • OR waiting for <strong>3 months</strong>
     </p>
     <button
-        class="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+        class="mt-4 px-4 py-2 bg-blue-600 text-white rounded text-base"
         @click="goToLessons"
         >
         Go to Lessons
@@ -256,16 +256,16 @@ const answers = computed(() => placementStore.answers);
 
 onMounted(async () => {
   try {
-    // 🔥 LUÔN gọi API này
+    
     await startPlacementTest();
 
-    // ✅ Nếu không bị 403 → có quyền làm test
+    
     const res = await getActivePlacementTest();
     test.value = res.data;
 
   } catch (err) {
     if (err.response?.status === 403) {
-      // ❌ chưa đủ điều kiện retake
+      
       retakeInfo.value = err.response.data;
     } else {
       console.error(err);

@@ -1,15 +1,15 @@
 <template>
     <div class="p-6 space-y-6">
-        <h1 class="text-2xl font-bold"> Manage Lessons</h1>
+        <h1 class="text-4xl font-black text-slate-800 tracking-tight mb-6"> Manage Lessons</h1>
 
         <!-- ================= TOPIC SELECT ================= -->
-        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
-        <label class="block text-sm font-medium mb-2">Select Topic</label>
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow space-y-3w">
+        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-30">Select Topic</label>
 
         <select
             v-model="selectedTopicId"
             @change="loadLessons"
-            class="w-full p-2 border rounded"
+            class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
         >
             <option value="">-- Choose topic --</option>
             <option
@@ -27,24 +27,24 @@
         v-if="selectedTopicId"
         class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow space-y-3"
         >
-        <h2 class="font-semibold"> Create Lesson</h2>
+        <h2 class="text-lg font-semibold"> Create Lesson</h2>
 
         <input
             v-model="newLesson.title"
             placeholder="Lesson title"
-            class="w-full p-2 border rounded"
+            class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
         />
         <p v-if="lessonErrors.title" class="text-red-500 text-sm">
             {{ lessonErrors.title }}
             </p>
         <div>
-            <label class="block text-sm font-medium mb-1">
+            <label class="block text-sm font-semibold mb-1">
                 Lesson Type
             </label>
 
             <select
                 v-model="newLesson.type"
-                class="w-full p-2 border rounded"
+                class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
             >
                 <option value="video">Video Lesson</option>
                 <option value="grammar">Grammar Lesson</option>
@@ -53,7 +53,7 @@
 
         <button
             @click="createNewLesson"
-            class="px-4 py-2 bg-blue-600 text-white rounded"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition"
         >
             Create
         </button>
@@ -64,7 +64,7 @@
         v-if="lessons.length"
         class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow"
         >
-        <h2 class="font-semibold mb-4">📄 Lessons</h2>
+        <h2 class="text-lg font-semibold">📄 Lessons</h2>
 
         <div
             v-for="lesson in lessons"
@@ -72,13 +72,13 @@
             class="border rounded p-3 mb-3 flex justify-between items-center"
         >
             <div>
-                <p class="font-medium">
+                <p class="font-semibold text-gray-800 dark:text-white">
                     {{ lesson.title }}
                     <span class="text-xs text-gray-500 ml-2">
                         ({{ lesson.type }})
                     </span>
                 </p>
-                <div class="flex items-center gap-3 text-sm text-gray-500">
+                <div class="flex items-center gap-4 text-sm text-gray-500 mt-1">
                     <span>Order: {{ lesson.order }}</span>
 
                     <label class="flex items-center gap-1 cursor-pointer">
@@ -95,7 +95,7 @@
             <div class="flex gap-2">
             <button
                 @click="editLesson(lesson)"
-                class="px-3 py-1 text-sm bg-yellow-500 text-white rounded"
+                class="px-3 py-1 text-sm bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
                 title="Edit lesson"
             >
                 <font-awesome-icon icon="pen-to-square" />
@@ -103,7 +103,7 @@
 
             <button
                 @click="removeLesson(lesson._id)"
-                class="px-3 py-1 text-sm bg-red-600 text-white rounded"
+                class="px-3 py-1 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
                 title="Delete lesson"
             >
                 <font-awesome-icon icon="trash" />
@@ -111,7 +111,7 @@
             
             <button
                 @click="goDetail(lesson._id)"
-                class="px-3 py-1 text-sm bg-blue-600 text-white rounded"
+                class="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             >
                 View Detail
             </button>
@@ -125,33 +125,33 @@
         v-if="editingLesson"
         class="fixed inset-0 bg-black/50 flex items-center justify-center"
         >
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl w-96 space-y-3">
-            <h2 class="font-semibold">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl w-96 space-y-4 shadow-2xl">
+            <h2 class="text-lg font-semibold flex items-center gap-2">
                 <font-awesome-icon icon="edit" class="mr-2" />
                 Edit Lesson</h2>
 
             <input
             v-model="editingLesson.title"
-            class="w-full p-2 border rounded"
+            class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
             />
 
             <input
             v-model.number="editingLesson.order"
             type="number"
-            class="w-full p-2 border rounded"
+            class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
             />
 
             <div class="flex justify-end gap-2">
             <button
                 @click="editingLesson = null"
-                class="px-4 py-1 border rounded"
+                class="px-4 py-2 border rounded-lg text-sm"
             >
                 Cancel
             </button>
 
             <button
                 @click="saveLesson"
-                class="px-4 py-1 bg-green-600 text-white rounded"
+                class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700"
             >
                 Save
             </button>
