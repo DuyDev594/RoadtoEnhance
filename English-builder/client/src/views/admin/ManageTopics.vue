@@ -1,6 +1,6 @@
 <template>
     <div class="p-6 max-w-6xl mx-auto">
-        <h1 class="text-4xl font-bold mb-8 text-gray-800 dark:text-white"> Manage Topics</h1>
+        <h1 class="text-2xl font-bold mb-8 text-gray-800 dark:text-white text-center"> Manage Topics</h1>
 
         <!-- Create Topic -->
         <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow mb-8">

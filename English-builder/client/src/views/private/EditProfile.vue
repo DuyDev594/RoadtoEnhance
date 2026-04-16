@@ -1,6 +1,6 @@
 <template>
     <div class="p-6 max-w-2xl mx-auto">
-        <h1 class="text-4xl font-bold mb-6">Edit Profile</h1>
+        <h1 class="text-2xl font-bold mb-6 text-center">Edit Profile</h1>
 
         <div class="bg-white p-6 rounded shadow space-y-4">
 

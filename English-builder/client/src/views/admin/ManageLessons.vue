@@ -1,6 +1,6 @@
 <template>
     <div class="p-6 space-y-6">
-        <h1 class="text-4xl font-black text-slate-800 tracking-tight mb-6"> Manage Lessons</h1>
+        <h1 class="text-2xl font-black text-center text-slate-800 tracking-tight mb-6"> Manage Lessons</h1>
 
         <!-- ================= TOPIC SELECT ================= -->
         <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow space-y-3w">

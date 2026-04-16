@@ -43,7 +43,7 @@
     v-else-if="test"
     class="max-w-4xl mx-auto p-6"
     >
-    <h1 class="text-4xl font-bold mb-6 text-center">Placement Test</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">Placement Test</h1>
 
     <!-- STEP INDICATOR -->
     <div class="flex justify-between mb-8">

@@ -2,7 +2,7 @@
     <div class="min-h-screen px-6 py-10 bg-gray-100 dark:bg-gray-900">
         <!-- Header -->
         <div class="mb-10 text-center">
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-white">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
             Your Learning Topics
         </h1>
         <p class="mt-2 text-base text-gray-600 dark:text-gray-300">

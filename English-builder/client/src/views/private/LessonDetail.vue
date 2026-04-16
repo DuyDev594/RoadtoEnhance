@@ -5,7 +5,7 @@
       <div class="flex items-center gap-4">
         <button
           @click="goBack"
-          class="p-2 bg-white rounded-full shadow-sm border border-slate-200 hover:text-blue-600 transition"
+          class="p-2 bg-white rounded-full shadow-sm border border-slate-200 hover:text-blue-600 transition "
           title="Back"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" /></svg>

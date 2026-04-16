@@ -91,12 +91,12 @@
               <span class="ml-2">Remember me</span>
             </label>
 
-            <RouterLink
+            <!-- <RouterLink
               to="/auth/forgot-password"
               class="text-blue-200 transition hover:text-white hover:underline"
             >
               Forgot password?
-            </RouterLink>
+            </RouterLink> -->
           </div>
 
           <Transition name="fade">

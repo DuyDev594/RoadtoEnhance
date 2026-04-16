@@ -1,6 +1,6 @@
 <template>
   <div class="p-6 space-y-6">
-    <h1 class="text-4xl font-bold">Flashcard Management</h1>
+    <h1 class="text-2xl font-bold text-center">Flashcard Management</h1>
 
     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
       <button

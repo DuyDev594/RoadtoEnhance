@@ -7,7 +7,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
         </router-link>
-        <h1 class="text-4xl font-bold text-slate-800 tracking-tight">Curriculum Content</h1>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white tracking-tight">Curriculum Content</h1>
       </div>
     </div>
 
@@ -16,7 +16,7 @@
       <p class="mt-4 text-base text-slate-400 font-medium">Fetching lessons...</p>
     </div>
 
-    <div v-else-if="lessonStore.lessons.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div v-else-if="lessonStore.lessons.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
       <div 
         v-for="lesson in sortedLessons" 
         :key="lesson._id"

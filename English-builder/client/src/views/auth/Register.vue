@@ -22,6 +22,9 @@
             <label for="username" class="absolute left-0 -top-3.5 text-blue-200 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-blue-100 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-white peer-focus:text-sm">
               User name
             </label>
+            <p v-if="errors.username" class="mt-1 text-xs text-red-200">
+              {{ errors.username }}
+            </p>
           </div>
 
           <div class="relative group">
@@ -43,7 +46,11 @@
                  class="absolute z-10 w-full p-3 mt-2 text-sm text-blue-800 bg-white border-l-4 border-yellow-400 rounded-md shadow-xl cursor-pointer animate-pulse">
               Did you mean: <span class="font-bold underline">{{ emailSuggestion }}</span>?
             </div>
-            
+
+            <p v-if="errors.email" class="mt-1 text-xs text-red-200">
+              {{ errors.email }}
+            </p>
+
             <p v-if="emailHint" class="text-[11px] text-yellow-200 mt-1 italic font-light">
               {{ emailHint }}
             </p>
@@ -61,6 +68,10 @@
             <label for="password" class="absolute left-0 -top-3.5 text-blue-200 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-blue-100 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-white peer-focus:text-sm">
               Password
             </label>
+
+            <p v-if="errors.password" class="mt-1 text-xs text-red-200">
+              {{ errors.password }}
+            </p>
           </div>
 
           <button
@@ -80,8 +91,8 @@
             ✕
           </button>
 
-          <div v-if="error" class="p-2 text-xs text-center text-red-100 border rounded bg-red-500/20 border-red-500/50">
-            {{ error }}
+          <div v-if="errors.general" class="p-2 text-xs text-center text-red-100 border rounded bg-red-500/20 border-red-500/50">
+            {{ errors.general }}
           </div>
         </form>
 
@@ -123,6 +134,13 @@ const form = reactive({
   password: "",
 });
 
+const errors = reactive({
+  username: "",
+  email: "",
+  password: "", 
+  general: ""
+});
+
 // --- SMART EMAIL LOGIC ---
 const emailSuggestion = ref("");
 const emailHint = ref("");
@@ -162,18 +180,23 @@ const close = () => {
 
 // --- REGISTER LOGIC ---
 const register = async () => {
-  error.value = "";
+  errors.username = "";
+  errors.email = "";
+  errors.password = "";
+  errors.general = "";
   
   // Final Manual Check (Since we used 'novalidate')
-  if (!form.username || !form.email || !form.password) {
-    error.value = "Please fill in all fields.";
-    return;
-  }
+  if (!form.username) errors.username = "Username is required";
+  if (!form.email) errors.email = "Email is required";
+  if (!form.password) errors.password = "Password is required";
+
+  if (errors.username || errors.email || errors.password) return;
+
 
   // Regex check for email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(form.email)) {
-    error.value = "Please provide a valid email address.";
+    errors.email = "Please provide a valid email address.";
     return;
   }
 
@@ -183,7 +206,18 @@ const register = async () => {
     router.push("/auth/login");
   } catch (err) {
     // Explicit English error message
-    error.value = err.response?.data?.message || "Registration failed. Please try again.";
+    const msg = err.response?.data?.message;
+
+    
+    if (msg === "Username already exists") {
+      errors.username = msg;
+    } 
+    else if (msg === "Email already exists") {
+      errors.email = msg;
+    } 
+    else {
+      errors.general = msg || "Registration failed";
+    }
   } finally {
     loading.value = false;
   }

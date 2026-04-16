@@ -13,11 +13,21 @@ export const register = async (req, res) => {
     }
 
     // 2. Check existing user
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-        return res.status(409).json({ message: "Email already exists" });
-    }
+    const existingUser = await User.findOne({
+        $or: [
+            { username },
+            { email }
+        ]
+    });
 
+    if (existingUser) {
+        if (existingUser.username === username) {
+            return res.status(409).json({ message: "Username already exists" });
+        }
+        if (existingUser.email === email) {
+            return res.status(409).json({ message: "Email already exists" });
+        }
+    }
     // 3. Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -44,7 +54,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password} = req.body;
 
 
         if (!email || !password) {

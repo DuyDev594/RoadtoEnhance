@@ -1,6 +1,6 @@
 <template>
   <div class="p-6 max-w-7xl mx-auto space-y-6">
-    <h1 class="text-4xl font-bold text-gray-800 dark:text-white">Manage Placement Tests</h1>
+    <h1 class="text-2xl font-bold text-center text-gray-800 dark:text-white">Manage Placement Tests</h1>
     <div class="grid grid-cols-3 gap-6">
       <div class="col-span-1 p-4 bg-white rounded shadow">
         <div class="flex items-center justify-between mb-3">
