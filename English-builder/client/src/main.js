@@ -6,6 +6,10 @@ import { useAuthStore } from "./stores/authStore.js";
 import "./assets/main.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import Toast from "vue-toastification"
+import "vue-toastification/dist/index.css"
+
+
 import {
     faUser,
     faBook,
@@ -39,7 +43,10 @@ import {
     faHeadphones,
     faFile,
     faLightbulb,
-    faXmark
+    faXmark,
+    faLock,
+    faVolumeHigh,
+    faClock
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -75,7 +82,11 @@ library.add(
     faHeadphones,
     faFile,
     faLightbulb,
-    faXmark
+    faXmark,
+    faLock,
+    faVolumeHigh,
+    faClock,
+    
 );
 
 const app = createApp(App);
@@ -84,7 +95,7 @@ const pinia = createPinia();
 app.use(pinia);
 app.use(router);
 app.component("font-awesome-icon", FontAwesomeIcon);
-
+app.use(Toast);
 const auth = useAuthStore();
 
 if (auth.token && !auth.user) {

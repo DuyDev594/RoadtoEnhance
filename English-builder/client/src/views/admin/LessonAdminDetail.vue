@@ -53,10 +53,10 @@
       </div>
       <div v-for="(seg, idx) in segments" :key="idx" class="border rounded-lg p-4 bg-gray-50 space-y-3 relative">
         <button @click="removeSegment(idx)" class="absolute top-2 right-2 text-red-500 hover:text-red-700">✕</button>
-        <textarea v-model="seg.transcript" placeholder="Nội dung lời thoại..." class="w-full border rounded p-2 text-sm" rows="2"></textarea>
+        <textarea v-model="seg.transcript" placeholder="content of the conversation..." class="w-full border rounded p-2 text-sm" rows="2"></textarea>
         <div class="flex gap-4">
-          <input type="number" v-model.number="seg.start" placeholder="Bắt đầu (s)" class="w-24 border rounded px-2 py-1 text-sm" />
-          <input type="number" v-model.number="seg.end" placeholder="Kết thúc (s)" class="w-24 border rounded px-2 py-1 text-sm" />
+          <input type="number" v-model.number="seg.start" placeholder="Start (s)" class="w-24 border rounded px-2 py-1 text-sm" />
+          <input type="number" v-model.number="seg.end" placeholder="End (s)" class="w-24 border rounded px-2 py-1 text-sm" />
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@
       
       <div
         @click="startReview"
-        class="bg-blue-600 text-white p-6 rounded-xl shadow cursor-pointer hover:scale-105 transition"
+        class="bg-blue-400 text-blue-800 p-6 rounded-xl shadow cursor-pointer hover:scale-105 transition"
       >
         <h2 class="text-lg font-semibold mb-2">
           Review Learned Words
@@ -73,16 +73,32 @@
 import { ref, onMounted } from "vue"
 import { getTopics, getAdvancedVocabularies, getReviewVocabularies } from "@/api/flashcardUser"
 import FlashcardSession from "@/components/Flashcard/FlashcardSession.vue"
+import { useToast } from "vue-toastification"
 
 const topics = ref([])
 const selectedTopic = ref(null)
-
+const toast = useToast()
 const reviewMode = ref(false)
+const reviewMessage = ref("")
 
-const startReview = () => {
-  selectedTopic.value = {
-    _id: "review",
-    name: "Review"
+const startReview = async () => {
+  try {
+    const res = await getReviewVocabularies()
+
+    if (!res.data || res.data.length === 0) {
+      toast.warning("There are no vocabulary words we have learned to review. Please complete some lessons first!")
+      return
+    }
+
+    reviewMessage.value = ""
+    selectedTopic.value = {
+      _id: "review",
+      name: "Review"
+    }
+
+  } catch (err) {
+    console.error("REVIEW ERROR:", err)
+    toast.error("An error occurred while loading review data.")
   }
 }
 

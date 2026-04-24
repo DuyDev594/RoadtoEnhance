@@ -72,7 +72,7 @@
             </p>
 
             <div class="text-xl tracking-widest mb-4">
-              {{ "*".repeat(currentCard.word.length) }}
+              {{ displayWord }}
             </div>
 
             <button
@@ -81,11 +81,6 @@
             >
               Hint
             </button>
-
-            <div v-if="hintWord" class="mb-4 text-lg text-purple-600">
-              {{ hintWord }}
-            </div>
-
             <input
               v-model="userAnswer"
               class="border rounded p-2 w-full mb-3 text-center"
@@ -93,11 +88,13 @@
               @keyup.enter="checkAnswer"
             />
             <div v-if="answerResult === 'correct'" class="text-green-600 font-semibold text-center mb-3">
-              ✔ Correct
+              <font-awesome-icon icon="check" class="mr-1" />
+              Correct
             </div>
 
             <div v-if="answerResult === 'incorrect'" class="text-red-600 font-semibold text-center mb-3">
-              ✖ Incorrect
+              <font-awesome-icon icon="xmark" class="mr-1" />
+              Incorrect
             </div>
             
             <div class="flex gap-2">
@@ -136,12 +133,16 @@
 
               <div v-if="currentCard.pronunciation?.us?.ipa">
                 US: {{ currentCard.pronunciation.us.ipa }}
-                <button @click="speak('en-US')" class="ml-2">🔊</button>
+                <button @click="speak('en-US')" class="ml-2">
+                  <font-awesome-icon icon="volume-high" />
+                </button>
               </div>
 
               <div v-if="currentCard.pronunciation?.uk?.ipa">
                 UK: {{ currentCard.pronunciation.uk.ipa }}
-                <button @click="speak('en-GB')" class="ml-2">🔊</button>
+                <button @click="speak('en-GB')" class="ml-2">
+                  <font-awesome-icon icon="volume-high" />
+                </button>
               </div>
 
             </div>
@@ -213,7 +214,19 @@ const currentCard = computed(() =>
 /* MASK EXAMPLE                  */
 /* ============================= */
 
+const displayWord = computed(() => {
+  if (!currentCard.value) return ""
 
+  const word = currentCard.value.word
+
+  
+  if (!hintWord.value) {
+    return "*".repeat(word.length)
+  }
+
+ 
+  return hintWord.value
+})
 
 const maskedExample = computed(() => {
 

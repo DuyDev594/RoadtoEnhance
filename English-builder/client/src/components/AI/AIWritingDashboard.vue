@@ -6,7 +6,7 @@
     </h1>
 
     <!-- START CARD -->
-    <div class=" p-6 rounded-xl shadow  ">
+    <div class=" bg-blue-100 p-6 rounded-xl shadow  ">
       <h2 class="text-lg font-semibold mb-2 text-gray-800 dark:text-white">
         Practice your writing with AI
       </h2>

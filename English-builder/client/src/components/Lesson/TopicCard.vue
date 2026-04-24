@@ -33,7 +33,8 @@
         </p>
 
        <p v-if="locked" class="text-red-500 text-sm mt-2">
-        🔒 Locked - Complete current level first
+        <font-awesome-icon icon="faLock" class="mr-2" />
+        Locked - Complete current level first
         </p>
 
         <!-- Action -->

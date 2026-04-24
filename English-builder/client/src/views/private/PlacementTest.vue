@@ -1,5 +1,18 @@
 <template>
 <div class="relative z-50">
+<div v-if="isOutOfTests" class="max-w-3xl mx-auto mt-10 p-8 bg-blue-50 border-2 border-black-200 rounded-xl text-center">
+    <div class="text-blue-500 text-5xl mb-4">
+       <font-awesome-icon :icon="['fas', 'check']" />
+    </div>
+    <h2 class="text-2xl font-bold text-blue-800 mb-2">The test questions have run out.</h2>
+    <p class="text-gray-600 mb-6">
+        You have completed all available placement tests.
+        Please come back later when we have updated content!
+    </p>
+    <button @click="goToDashboard" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        Return to Dashboard
+    </button>
+  </div>
 <!-- ================= LOADING ================= -->
 <div
     v-if="!test && !authStore.user?.hasTakenPlacementTest"
@@ -203,12 +216,12 @@
     </p>
 
     <p class="text-base">
-      📚 Completed Lessons:
+        <font-awesome-icon :icon="['fas', 'book']" class="text-green-500" /> Completed Lessons:
       <strong>{{ retakeInfo.completedLessons }} / 5</strong>
     </p>
 
     <p class="text-base">
-      ⏳ Remaining Time:
+      <font-awesome-icon :icon="['fas', 'clock']" class="text-yellow-500" /> Remaining Time:
       <strong>
         {{ Math.ceil(retakeInfo.remainingTime / (1000*60*60*24)) }} days
       </strong>
@@ -253,6 +266,8 @@ const submitting = ref(false);
 const result = ref(null);
 const retakeInfo = ref(null);
 const answers = computed(() => placementStore.answers);
+const isOutOfTests = ref(false);
+
 
 onMounted(async () => {
   try {
@@ -264,9 +279,15 @@ onMounted(async () => {
     test.value = res.data;
 
   } catch (err) {
-    if (err.response?.status === 403) {
-      
+    const status = err.response?.status;
+    const message = err.response?.data?.message;
+
+    if (status === 403) {
       retakeInfo.value = err.response.data;
+    } 
+    
+    else if (status === 404 && message.includes("You have completed all available placement tests.")) {
+      isOutOfTests.value = true;
     } else {
       console.error(err);
     }

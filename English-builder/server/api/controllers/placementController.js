@@ -42,11 +42,13 @@ export const startPlacementTest = async (req, res) => {
             ts => !usedTestSetIds.some(id => id.toString() === ts._id.toString())
         );
 
-        
-        const pool = availableTestSets.length
-            ? availableTestSets
-            : activeTestSets;
+        if (availableTestSets.length === 0) {
+            return res.status(404).json({
+                message: "You have completed all available placement tests."
+            });
+        }
 
+        const pool = availableTestSets;
         
         const randomIndex = Math.floor(Math.random() * pool.length);
         const randomTestSet = pool[randomIndex];
