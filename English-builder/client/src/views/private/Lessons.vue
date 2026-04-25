@@ -3,10 +3,10 @@
         <!-- Header -->
         <div class="mb-10 text-center">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
-            Your Learning Units
+            Your Learning Topics
         </h1>
         <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
-            Units are selected based on your current level
+            Topics are selected based on your current level
         </p>
         </div>
         <div

@@ -26,7 +26,8 @@
       <h4 class="font-semibold">Corrections</h4>
       <ul class="list-disc ml-5 text-sm">
         <li v-for="(e, i) in result.errors" :key="i">
-          ❌ {{ e.original }} → ✅ {{ e.suggestion }}
+          <font-awesome-icon icon="xmark" class="text-red-500 mr-2" />
+          {{ e.original }} → <font-awesome-icon icon="check" class="text-green-500 mr-2" /> {{ e.suggestion }}
         </li>
       </ul>
     </div>
