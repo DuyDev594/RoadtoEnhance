@@ -134,12 +134,17 @@
             v-model="editingLesson.title"
             class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
             />
-
+            <p v-if="editErrors.title" class="text-red-500 text-sm mt-1">
+                {{ editErrors.title }}
+            </p>
             <input
             v-model.number="editingLesson.order"
             type="number"
             class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
             />
+            <p v-if="editErrors.order" class="text-red-500 text-sm mt-1">
+                {{ editErrors.order }}
+            </p>
 
             <div class="flex justify-end gap-2">
             <button
@@ -172,7 +177,7 @@ import {
     deleteLesson
 } from "@/api/lessonAdmin";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
+const editErrors = ref({});
 const router = useRouter();
 
 const goDetail = (id) => {
@@ -204,6 +209,19 @@ onMounted(async () => {
     lessons.value = res.data;
 };
 
+const validateEditLesson = () => {
+    editErrors.value = {};
+
+    if (!editingLesson.value.title?.trim()) {
+        editErrors.value.title = "Title is required";
+    }
+
+    if (!editingLesson.value.order || editingLesson.value.order < 1) {
+        editErrors.value.order = "Order must be greater than 0";
+    }
+
+    return Object.keys(editErrors.value).length === 0;
+};
 /* ================= ACTIONS ================= */
 const createNewLesson = async () => {
     lessonErrors.value = {};
@@ -240,13 +258,18 @@ const editLesson = (lesson) => {
 };
 
 const saveLesson = async () => {
-    await updateLesson(editingLesson.value._id, {
-        title: editingLesson.value.title,
-        order: editingLesson.value.order
-    });
+    if (!validateEditLesson()) return;
+   try {
+        await updateLesson(editingLesson.value._id, {
+            title: editingLesson.value.title,
+            order: editingLesson.value.order
+        });
 
-    editingLesson.value = null;
-    await loadLessons();
+        editingLesson.value = null;
+        await loadLessons();
+    } catch (err) {
+        alert(err.response?.data?.message || "Update failed");
+    }
 };
 
 const removeLesson = async (id) => {

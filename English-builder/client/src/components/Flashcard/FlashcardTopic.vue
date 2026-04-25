@@ -91,7 +91,22 @@ onMounted(() => {
   store.fetchTopics();
 });
 
+const validate = () => {
+  errors.value = {};
+
+  if (!form.value.name?.trim()) {
+    errors.value.name = "Topic name is required";
+  }
+
+  if (!form.value.description?.trim()) {
+    errors.value.description = "Description is required";
+  }
+
+  return Object.keys(errors.value).length === 0;
+};
+
 const handleSubmit = async () => {
+  if (!validate()) return;
   try{
     if (isEditing.value) {
     await store.editTopic(editingId.value, form.value);

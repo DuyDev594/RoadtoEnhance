@@ -71,11 +71,19 @@
             <h3 class="font-semibold mb-4">Edit Topic</h3>
 
             <input v-model="editing.title" class="input mb-3" />
+            <p v-if="editErrors.title" class="text-red-500 text-sm mb-2">
+                {{ editErrors.title }}
+            </p>
             <input type="number" v-model.number="editing.order" class="input mb-3" />
-
+            <p v-if="editErrors.order" class="text-red-500 text-sm mb-2">
+                {{ editErrors.order }}
+            </p>
             <select v-model="editing.level" class="input mb-4">
             <option v-for="l in levels" :key="l">{{ l }}</option>
             </select>
+            <p v-if="editErrors.level" class="text-red-500 text-sm mb-2">
+                {{ editErrors.level }}
+            </p>
 
             <div class="flex justify-end gap-2">
             <button class="btn text-sm" @click="editing=null">Cancel</button>
@@ -90,7 +98,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "@/api/api";
-
+const editErrors = ref({});
 const topics = ref([]);
 const editing = ref(null);
 const errors = ref ({});
@@ -136,9 +144,15 @@ const editTopic = (topic) => {
 };
 
 const updateTopic = async () => {
-    await api.put(`/admin/topics/${editing.value._id}`, editing.value);
-    editing.value = null;
-    fetchTopics();
+    if (!validateEdit()) return;
+
+    try {
+        await api.put(`/admin/topics/${editing.value._id}`, editing.value);
+        editing.value = null;
+        fetchTopics();
+    } catch (err) {
+        alert(err.response?.data?.message || "Update failed");
+    }
 };
 
 const deleteTopic = async (id) => {
@@ -152,6 +166,24 @@ const togglePublish = async (topic) => {
         isPublished: !topic.isPublished
     });
     fetchTopics();
+};
+
+const validateEdit = () => {
+    editErrors.value = {};
+
+    if (!editing.value.title?.trim()) {
+        editErrors.value.title = "Title is required";
+    }
+
+    if (!editing.value.level) {
+        editErrors.value.level = "Level is required";
+    }
+
+    if (!editing.value.order || editing.value.order < 1) {
+        editErrors.value.order = "Order must be greater than 0";
+    }
+
+    return Object.keys(editErrors.value).length === 0;
 };
 </script>
 

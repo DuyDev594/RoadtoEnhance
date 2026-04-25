@@ -3,7 +3,7 @@
       <h4 class="mb-2 font-semibold text-blue-700">{{ title }}</h4>
 
       <div v-if="!questions || questions.length === 0" class="p-2 text-sm italic text-gray-400">
-        Chưa có câu hỏi nào.
+        Questions will appear here once you add them to the passage. Use the form on the right to create new questions.
       </div>
 
       <ul v-else class="space-y-2">

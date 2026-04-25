@@ -1,6 +1,7 @@
 import PlacementTestSet from "../models/PlacementTestSet.js";
 import ReadingPassage from "../models/ReadingPassage.js";
 import PlacementQuestion from "../models/PlacementQuestion.js"; 
+import PlacementResult from "../models/PlacementResult.js";
 
 export const createTestSet = async (req, res) => {
     try {
@@ -35,10 +36,27 @@ export const updateTestSet = async (req, res) => {
 
 export const deleteTestSet = async (req, res) => {
     try {
-        await PlacementTestSet.findByIdAndDelete(req.params.id);
-        res.json({ message: "Test set deleted" });
+        const testSetId = req.params.id;
+
+        
+        await PlacementQuestion.deleteMany({ testSetId });
+        await ReadingPassage.deleteMany({ testSetId });
+        await PlacementResult.deleteMany({ testSetId });
+
+        
+        const deleted = await PlacementTestSet.findByIdAndDelete(testSetId);
+
+        if (!deleted) {
+            return res.status(404).json({
+                message: "Test set not found"
+            });
+        }
+
+        res.json({ message: "Test set deleted successfully" });
+
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        console.error("Delete test set error:", err);
+        res.status(500).json({ message: err.message });
     }
 };
 

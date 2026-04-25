@@ -13,6 +13,9 @@
             class="w-full input"
             placeholder="Enter question text"
         ></textarea>
+        <p v-if="errors.questionText" class="text-red-500 text-sm mt-1">
+            {{ errors.questionText }}
+        </p>
     </div>
 
     <!-- Options -->
@@ -34,6 +37,9 @@
                 />
             </div>
         </div>
+        <p v-if="errors.options" class="text-red-500 text-sm mt-1">
+            {{ errors.options }}
+        </p>
     </div>
 
     <!-- Correct Answer -->
@@ -52,6 +58,9 @@
                 {{ String.fromCharCode(65 + i) }}. {{ o }}
             </option>
         </select>
+        <p v-if="errors.correctAnswer" class="text-red-500 text-sm mt-1">
+            {{ errors.correctAnswer }}
+        </p>
     </div>
 
     <!-- Level -->
@@ -93,6 +102,7 @@
 import { reactive, computed, watch, ref } from "vue";
 import placementAdminApi from "../api/placementAdmin";
 const error = ref(null)
+const errors = ref({})
 const props = defineProps({
     testSetId: String,
     passageId: String,
@@ -104,6 +114,25 @@ const emit = defineEmits(["created", "updated", "cancel"]);
 const isEdit = computed(() => !!props.initialData?._id);
 const levels = ["A1", "A2", "B1", "B2", "C1"];
 
+const validate = () => {
+    errors.value = {};
+
+    if (!form.questionText.trim()) {
+        errors.value.questionText = "Question is required";
+    }
+
+    form.options.forEach((opt, i) => {
+        if (!opt.trim()) {
+            errors.value[`option_${i}`] = "Option cannot be empty";
+        }
+    });
+
+    if (!form.correctAnswer) {
+        errors.value.correctAnswer = "Please select correct answer";
+    }
+
+    return Object.keys(errors.value).length === 0;
+};
 const form = reactive({
     questionText: "",
     options: ["", "", "", ""],
@@ -136,6 +165,9 @@ watch(
 );
 
 const submit = async () => {
+    error.value = null;
+
+    if (!validate()) return;
     try {
         if (isEdit.value) {
         await placementAdminApi.updateQuestion(props.initialData._id, form);

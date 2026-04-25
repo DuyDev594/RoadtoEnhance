@@ -208,6 +208,9 @@
                     type="text"
                     class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white"
                     />
+                    <p v-if="editErrors.username" class="text-red-500 text-sm mt-1">
+                        {{ editErrors.username }}
+                    </p>
                 </div>
 
                 <div class="space-y-1">
@@ -217,6 +220,9 @@
                     type="email"
                     class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white"
                     />
+                    <p v-if="editErrors.email" class="text-red-500 text-sm mt-1">
+                        {{ editErrors.email }}
+                    </p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -233,11 +239,20 @@
 
                     <div class="space-y-1">
                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Level</label>
-                    <input 
+                    <select 
                         v-model="editForm.level" 
-                        type="number"
                         class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white"
-                    />
+                    >
+                        <option value="">Select level</option>
+                        <option value="A1">A1</option>
+                        <option value="A2">A2</option>
+                        <option value="B1">B1</option>
+                        <option value="B2">B2</option>
+                        <option value="C1">C1</option>
+                    </select>
+                    <p v-if="editErrors.level" class="text-red-500 text-sm mt-1">
+                        {{ editErrors.level }}
+                    </p>
                     </div>
                 </div>
                 </div>
@@ -320,6 +335,7 @@ const showModal = ref(false);
 const showEditModal = ref(false);
 const editingUser = ref(null);
 const errors= ref({});
+const editErrors = ref({});
 
 // Add User Form
 const form = ref({
@@ -371,9 +387,31 @@ const openEdit = (user) => {
 };
 // Save Edit
 const saveEdit = async () => {
-    await updateUser(editingUser.value._id, editForm.value);
-    showEditModal.value = false;
-    fetchUsers();
+    editErrors.value = {};
+
+    // Validate
+    if (!editForm.value.username) {
+        editErrors.value.username = "Username is required";
+    }
+
+    if (!editForm.value.email) {
+        editErrors.value.email = "Email is required";
+    }
+
+    if (!editForm.value.level) {
+        editErrors.value.level = "Level is required";
+    }
+
+    // Nếu có lỗi → stop
+    if (Object.keys(editErrors.value).length > 0) return;
+
+    try {
+        await updateUser(editingUser.value._id, editForm.value);
+        showEditModal.value = false;
+        fetchUsers();
+    } catch (err) {
+        alert(err.response?.data?.message || "Update failed");
+    }
 };
 
 // Search Input

@@ -13,6 +13,9 @@
             class="input"
             placeholder="Passage title"
         />
+        <p v-if="errors.title" class="text-red-500 text-sm mt-1">
+            {{ errors.title }}
+        </p>
         </div>
 
         <!-- Passage Text -->
@@ -24,6 +27,9 @@
             class="input"
             placeholder="Enter reading passage text..."
         ></textarea>
+        <p v-if="errors.passageText" class="text-red-500 text-sm mt-1">
+            {{ errors.passageText }}
+        </p>
         </div>
 
         <!-- Level -->
@@ -35,6 +41,9 @@
             {{ l }}
             </option>
         </select>
+        <p v-if="errors.level" class="text-red-500 text-sm mt-1">
+            {{ errors.level }}
+        </p>
         </div>
 
         <!-- Order -->
@@ -47,6 +56,9 @@
             max="3"
             class="input"
         />
+        <p v-if="errors.order" class="text-red-500 text-sm mt-1">
+            {{ errors.order }}
+        </p>
         </div>
 
         <!-- Actions -->
@@ -75,7 +87,12 @@
 <script setup>
 import { reactive, ref, computed, watch } from "vue";
 import placementAdminApi from "../api/placementAdmin.js";
-
+const errors = reactive({
+  title: "",
+  passageText: "",
+  level: "",
+  order: ""
+});
 
 const props = defineProps({
     testSetId: {
@@ -88,7 +105,36 @@ const props = defineProps({
     }
 });
 
+const validate = () => {
+  errors.title = "";
+  errors.passageText = "";
+  errors.level = "";
+  errors.order = "";
 
+  let isValid = true;
+
+  if (!form.title?.trim()) {
+    errors.title = "Title is required";
+    isValid = false;
+  }
+
+  if (!form.passageText?.trim()) {
+    errors.passageText = "Passage text is required";
+    isValid = false;
+  }
+
+  if (!form.level) {
+    errors.level = "Level is required";
+    isValid = false;
+  }
+
+  if (!form.order || form.order < 1 || form.order > 3) {
+    errors.order = "Order must be between 1 and 3";
+    isValid = false;
+  }
+
+  return isValid;
+};
 
 const levels = ["A1", "A2", "B1", "B2", "C1"];
 
@@ -124,6 +170,10 @@ const reset = () => {
     form.order = 1;
     error.value = "";
     success.value = "";
+    errors.title = "";
+    errors.passageText = "";
+    errors.level = "";
+    errors.order = "";
 };
 
 const emit = defineEmits(["created", "updated", "cancel"]);
@@ -131,26 +181,26 @@ const emit = defineEmits(["created", "updated", "cancel"]);
 const submit = async () => {
     error.value = "";
     success.value = "";
-
+    if (!validate()) return;
     try {
-        if (isEdit.value) {
-        await placementAdminApi.updateReadingPassage(
-            props.initialData._id,
-            form
-        );
-        emit("updated");
-        } else {
-        await placementAdminApi.createReadingPassage({
-            ...form,
-            testSetId: props.testSetId
-        });
-        emit("created");
-        reset();
-        }
-        
-    } catch (err) {
-        error.value = err.response?.data?.message || "Submit failed";
+    if (isEdit.value) {
+      await placementAdminApi.updateReadingPassage(
+        props.initialData._id,
+        form
+      );
+      emit("updated");
+    } else {
+      await placementAdminApi.createReadingPassage({
+        ...form,
+        testSetId: props.testSetId
+      });
+      emit("created");
+      reset();
     }
+
+  } catch (err) {
+    error.value = err.response?.data?.message || "Submit failed";
+  }
 };
 </script>
 

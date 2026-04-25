@@ -41,6 +41,9 @@
           <input v-model="videoInput" placeholder="https://www.youtube.com/watch?v=..." class="w-full border rounded-lg px-3 py-2 border-blue-300 focus:border-blue-500" />
           <p class="text-xs text-gray-400 mt-2 italic">The system ID is obtained from the YouTube link: {{ lesson.video.videoId }}</p>
         </div>
+        <p v-if="errors.video" class="text-red-500 text-sm">
+          {{ errors.video }}
+        </p>
       </div>
     </div>
 
@@ -54,9 +57,18 @@
       <div v-for="(seg, idx) in segments" :key="idx" class="border rounded-lg p-4 bg-gray-50 space-y-3 relative">
         <button @click="removeSegment(idx)" class="absolute top-2 right-2 text-red-500 hover:text-red-700">✕</button>
         <textarea v-model="seg.transcript" placeholder="content of the conversation..." class="w-full border rounded p-2 text-sm" rows="2"></textarea>
+        <p v-if="errors.segments[idx]?.transcript" class="text-red-500 text-sm">
+          {{ errors.segments[idx].transcript }}
+        </p>
         <div class="flex gap-4">
           <input type="number" v-model.number="seg.start" placeholder="Start (s)" class="w-24 border rounded px-2 py-1 text-sm" />
+          <p v-if="errors.segments[idx]?.start" class="text-red-500 text-sm">
+            {{ errors.segments[idx].start }}
+          </p>
           <input type="number" v-model.number="seg.end" placeholder="End (s)" class="w-24 border rounded px-2 py-1 text-sm" />
+          <p v-if="errors.segments[idx]?.end" class="text-red-500 text-sm">
+            {{ errors.segments[idx].end }}
+          </p>
         </div>
       </div>
     </div>
@@ -84,9 +96,19 @@
             <option value="fill_blank">Fill Blank</option>
           </select>
           <input v-model="q.question" placeholder="Question Content" class="flex-1 border rounded px-3 py-1 text-sm" />
+          <p v-if="errors.review[idx]?.question" class="text-red-500 text-sm">
+            {{ errors.review[idx].question }}
+          </p>
         </div>
         <textarea v-if="q.type === 'multiple_choice'" v-model="q.optionsText" placeholder="Multiple Choices (One sentence per line)" class="w-full border rounded p-2 text-sm" rows="2"></textarea>
+        <p v-if="errors.review[idx]?.options" class="text-red-500 text-sm">
+          {{ errors.review[idx].options }}
+        </p>
+
         <input v-model="q.answer" placeholder="Correct Answer" class="w-full border rounded px-3 py-1 text-sm bg-green-50" />
+        <p v-if="errors.review[idx]?.answer" class="text-red-500 text-sm">
+        {{ errors.review[idx].answer }}
+      </p>
       </div>
     </div>
   </div>
@@ -106,7 +128,11 @@ const segments = ref([]);
 const grammarContent = ref("");
 const reviewQuestions = ref([]);
 const editorRef = ref(null);
-
+const errors = ref({
+  video: "",
+  segments: [],
+  review: []
+});
 // Watcher an toàn: Chỉ chạy khi có giá trị và lesson đã load
 watch(videoInput, (val) => {
   if (!val || !lesson.value) return;
@@ -137,7 +163,77 @@ onMounted(async () => {
   }
 });
 
+const validate = () => {
+  let isValid = true;
+
+  errors.value = {
+    video: "",
+    segments: [],
+    review: []
+  };
+
+  
+  // ===== VIDEO =====
+  if (!lesson.value.video?.videoId) {
+    errors.value.video = "Video is required";
+    isValid = false;
+  }
+
+  // ===== SEGMENTS =====
+  if (lesson.value.type === "video") {
+    errors.value.segments = segments.value.map(seg => {
+      const segErr = {};
+
+      if (!seg.transcript?.trim()) {
+        segErr.transcript = "Transcript is required";
+        isValid = false;
+      }
+
+      if (seg.start == null || seg.start < 0) {
+        segErr.start = "Invalid start time";
+        isValid = false;
+      }
+
+      if (seg.end == null || seg.end <= seg.start) {
+        segErr.end = "End must be greater than start";
+        isValid = false;
+      }
+
+      return segErr;
+    });
+  }
+
+  // ===== REVIEW =====
+  errors.value.review = reviewQuestions.value.map(q => {
+    const qErr = {};
+
+    if (!q.question?.trim()) {
+      qErr.question = "Question is required";
+      isValid = false;
+    }
+
+    if (!q.answer?.trim()) {
+      qErr.answer = "Answer is required";
+      isValid = false;
+    }
+
+    if (q.type === "multiple_choice") {
+      const options = q.optionsText.split("\n").filter(o => o.trim());
+
+      if (options.length < 2) {
+        qErr.options = "At least 2 options required";
+        isValid = false;
+      }
+    }
+
+    return qErr;
+  });
+
+  return isValid;
+};
+
 const saveAll = async () => {
+  if (!validate()) return;
   try {
     const lessonId = route.params.id;
 

@@ -273,7 +273,9 @@
       placeholder="Test set name"
       class="w-full border rounded px-3 py-2"
     />
-
+    <p v-if="editErrors.name" class="text-red-500 text-sm mt-1">
+      {{ editErrors.name }}
+    </p>
     <!-- Actions -->
     <div class="flex justify-end gap-3">
       <button @click="editingTestSet = null" class="px-4 py-2 bg-gray-200 rounded">
@@ -314,6 +316,7 @@ const openGrammarForm = ref(false);
 const editingVocabQuestion = ref(null);
 const editingGrammarQuestion = ref(null);
 const editingTestSet = ref(null);
+const editErrors = ref({});
 const editForm = ref({
   name: "",
   
@@ -346,7 +349,16 @@ const selectTestSet = async (set) => {
     ]);
 };
 
+
 const updateTestSetHandler = async () => {
+  editErrors.value = {};
+
+  if (!editForm.value.name) {
+    editErrors.value.name = "Test set name is required";
+  }
+
+  if (Object.keys(editErrors.value).length > 0) return;
+
   try {
     await placementAdminApi.updateTestSet(
       editingTestSet.value._id,
@@ -360,7 +372,27 @@ const updateTestSetHandler = async () => {
     alert("Update failed");
     console.error(err);
   }
-}
+};
+
+const deleteTestSet = async (id) => {
+  if (!confirm("Are you sure you want to delete this test set?")) return;
+
+  try {
+    await placementAdminApi.deleteTestSet(id);
+
+   
+    await fetchTestSets();
+
+   
+    if (selectedTestSet.value?._id === id) {
+      selectedTestSet.value = null;
+    }
+
+  } catch (err) {
+    alert("Delete failed!");
+    console.error(err);
+  }
+};
 
 const loadReadingPassages = async () => {
     if (!selectedTestSet.value) return;
