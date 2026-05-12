@@ -92,11 +92,29 @@ const formatTime = (sec) => {
 };
 
 // Watch for videoId changes if user switches lessons without full page reload
-watch(() => props.videoId, (newId) => {
-    if (player.value && player.value.loadVideoById) {
-        player.value.loadVideoById(newId);
-    }
-});
+watch(
+
+  () => props.videoId,
+
+  (newId) => {
+
+    if (!player.value || !newId) return
+
+    // clear timer cũ
+    clearInterval(timer)
+
+    // stop video cũ
+    player.value.stopVideo()
+
+    // load video mới
+    player.value.loadVideoById({
+      videoId: newId,
+      startSeconds: 0
+    })
+
+  }
+
+)
 
 watch(() => props.trigger, () => {
 

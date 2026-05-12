@@ -34,7 +34,7 @@
         </div>
 
         <div class="flex gap-3">
-            <button @click="$emit('replay')">Replay</button>
+            <!-- <button @click="$emit('replay')">Replay</button> -->
             <button @click="reveal">Reveal Word</button>
             <button v-if="completed" @click="$emit('next')">Next →</button>
         </div>

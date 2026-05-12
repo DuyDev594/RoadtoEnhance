@@ -35,6 +35,7 @@
         <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
           <div class="bg-black aspect-video relative group">
             <LessonPlayer 
+              :key="lesson.video?.videoId"
               v-if="lesson.video?.videoId"
               :video-id="lesson.video.videoId" 
               :segments="lesson.segments" 
@@ -213,7 +214,7 @@
 </style>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useLessonStore } from "@/stores/lessonStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
@@ -258,25 +259,59 @@ const isCompleted = computed(() => {
   );
 });
 
-onMounted(async () => {
+const loadLesson = async (id) => {
 
-  await lessonStore.fetchLessonDetail(route.params.id)
+  // reset state cũ
+  currentSegIdx.value = 0
+  triggerPlay.value = 0
+  completedSegs.value = []
 
+  // fetch lesson mới
+  await lessonStore.fetchLessonDetail(id)
+
+  // load progress
   if (lessonStore.currentProgress) {
 
     reviewScore.value = lessonStore.currentProgress.score
 
     if (lessonStore.currentProgress.completedSegments) {
-        completedSegs.value = lessonStore.currentProgress.completedSegments
+
+      completedSegs.value =
+        lessonStore.currentProgress.completedSegments
+
     }
 
     if (lessonStore.currentProgress?.status === "completed") {
-        activeTab.value = "review"
+
+      activeTab.value = "review"
+
+    } else {
+
+      activeTab.value = "study"
+
     }
 
   }
 
+}
+
+onMounted(() => {
+
+  loadLesson(route.params.id)
+
 })
+
+watch(
+
+  () => route.params.id,
+
+  (newId) => {
+
+    loadLesson(newId)
+
+  }
+
+)
 
 const nextSeg = () => {
   if (currentSegIdx.value < lesson.value.segments.length - 1) {

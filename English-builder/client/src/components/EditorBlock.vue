@@ -38,7 +38,7 @@ onMounted(() => {
 
     holder: "editorjs",
 
-    placeholder: "Write grammar explanation here...",
+    placeholder: "Write text here...",
 
     autofocus: true,
 
