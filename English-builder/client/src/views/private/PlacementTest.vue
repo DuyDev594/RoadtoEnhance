@@ -54,9 +54,17 @@
 <!-- ================= CHƯA LÀM PLACEMENT TEST ================= -->
 <div
     v-else-if="test"
-    class="max-w-4xl mx-auto p-6"
+    class="max-w-5xl mx-auto py-4 sm:py-6"
     >
-    <h1 class="text-2xl font-bold mb-6 text-center">Placement Test</h1>
+    <!-- Standardized Centered Header -->
+    <div class="text-center mb-8 sm:mb-10">
+      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+        Placement Test
+      </h1>
+      <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-2 max-w-xl mx-auto">
+        Complete the assessment test to determine your English proficiency level
+      </p>
+    </div>
 
     <!-- STEP INDICATOR -->
     <div class="flex justify-between mb-8">

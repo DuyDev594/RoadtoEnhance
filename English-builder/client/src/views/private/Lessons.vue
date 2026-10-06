@@ -1,13 +1,13 @@
 <template>
-    <div class="min-h-screen px-6 py-10 bg-gray-100 dark:bg-gray-900">
+    <div class="w-full">
         <!-- Header -->
-        <div class="mb-10 text-center">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
-            Your Learning Topics
-        </h1>
-        <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
-            Topics are selected based on your current level
-        </p>
+        <div class="mb-8 sm:mb-10 text-center">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+              Your Learning Topics
+          </h1>
+          <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-2 max-w-xl mx-auto">
+              Topics are selected based on your current level
+          </p>
         </div>
         <div
             v-if="auth.user && !auth.user.level"
@@ -42,11 +42,12 @@
         <!-- Topics -->
         <!-- CURRENT LEVEL -->
         <div v-if="lessonStore.currentTopics.length">
-            <h2 class="text-2xl font-semibold mb-4 text-green-600">
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                <span class="w-2.5 h-6 bg-emerald-500 rounded-full"></span>
                 Current Level: {{ lessonStore.currentLevel }}
             </h2>
 
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <TopicCard
                     v-for="topic in lessonStore.currentTopics"
                     :key="topic._id"
@@ -57,12 +58,13 @@
         </div>
 
         <!-- NEXT LEVEL -->
-        <div v-if="lessonStore.nextTopics.length" class="mt-10">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-500">
+        <div v-if="lessonStore.nextTopics.length" class="mt-12">
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                <span class="w-2.5 h-6 bg-gray-400 rounded-full"></span>
                 Next Level: {{ lessonStore.nextLevel }}
             </h2>
 
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <TopicCard
                     v-for="topic in lessonStore.nextTopics"
                     :key="topic._id"
