@@ -76,7 +76,7 @@ export const login = async (req, res) => {
             id: user._id,
             role: user.role
         },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || "roadtoenhance_secret_key_2026",
         { expiresIn: "1d" }
         );
 
