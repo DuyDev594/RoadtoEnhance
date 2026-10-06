@@ -97,7 +97,7 @@ import { useLessonStore } from "@/stores/lessonStore";
 import { useAuthStore } from "@/stores/authStore";
 
 
-import TopicCard from "@/components/lesson/TopicCard.vue";
+import TopicCard from "@/components/Lesson/TopicCard.vue";
 
 const lessonStore = useLessonStore();
 const router = useRouter();
