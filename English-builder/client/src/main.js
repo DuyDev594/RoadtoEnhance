@@ -46,7 +46,9 @@ import {
     faXmark,
     faLock,
     faVolumeHigh,
-    faClock
+    faClock,
+    faBars,
+    faSun
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -86,7 +88,8 @@ library.add(
     faLock,
     faVolumeHigh,
     faClock,
-    
+    faBars,
+    faSun
 );
 
 const app = createApp(App);

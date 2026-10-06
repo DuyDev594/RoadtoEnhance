@@ -1,22 +1,22 @@
 <template>
 <div class="relative z-50">
-<div v-if="isOutOfTests" class="max-w-3xl mx-auto mt-10 p-8 bg-blue-50 dark:bg-blue-900 border-2 border-black-200 rounded-xl text-center">
-    <div class="text-blue-500 dark:text-white text-5xl mb-4">
+<div v-if="isOutOfTests" class="max-w-3xl mx-auto mt-10 p-8 bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 rounded-2xl text-center shadow-sm">
+    <div class="text-blue-500 dark:text-blue-400 text-5xl mb-4">
        <font-awesome-icon :icon="['fas', 'check']" />
     </div>
-    <h2 class="text-2xl font-bold text-blue-800 dark:text-white mb-2">The test questions have run out.</h2>
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">The test questions have run out.</h2>
     <p class="text-gray-600 dark:text-gray-300 mb-6">
         You have completed all available placement tests.
         Please come back later when we have updated content!
     </p>
-    <button @click="goToDashboard" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+    <button @click="goToDashboard" class="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition">
         Return to Dashboard
     </button>
 </div>
 <!-- ================= LOADING ================= -->
 <div
     v-if="!test && !authStore.user?.hasTakenPlacementTest"
-    class="text-center py-10 text-base text-gray-500"
+    class="text-center py-10 text-base text-gray-500 dark:text-gray-400"
     >
     Loading placement test...
 </div>
@@ -24,9 +24,9 @@
 <!-- ================= RESULT (VỪA SUBMIT) ================= -->
 <div
     v-else-if="result"
-    class="max-w-4xl mx-auto mt-10 p-6 bg-green-50 dark:bg-blue-900 border rounded"
+    class="max-w-4xl mx-auto mt-10 p-6 bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-gray-700 rounded-2xl shadow-sm text-gray-900 dark:text-gray-100"
     >
-    <h2 class="text-2xl dark:text-blue font-semibold mb-4">
+    <h2 class="text-2xl text-gray-900 dark:text-gray-100 font-bold mb-4">
         Your English Level: {{ result.assignedLevel }}
     </h2>
 
@@ -199,17 +199,17 @@
 <!-- ================= ĐÃ LÀM TRƯỚC ĐÓ (RELOAD) ================= -->
 <div
   v-else
-  class="max-w-3xl mx-auto mt-10 p-6 bg-blue-50  dark:bg-blue-600 border rounded"
+  class="max-w-3xl mx-auto mt-10 p-6 sm:p-8 bg-blue-50/80 dark:bg-gray-800 border border-blue-200 dark:border-gray-700/80 rounded-2xl shadow-sm text-gray-900 dark:text-gray-100"
 >
-  <h2 class="text-2xl font-semibold mb-4">Placement Test Completed</h2>
+  <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Placement Test Completed</h2>
 
-  <p class="text-base dark:text-white">Your English level:</p>
-  <p class="text-4xl dark:text-white font-bold text-blue-600 mt-2">
+  <p class="text-base text-gray-600 dark:text-gray-300">Your English level:</p>
+  <p class="text-4xl font-extrabold text-blue-600 dark:text-blue-400 mt-2">
     {{ authStore.user.level }}
   </p>
 
   <!-- REASON BLOCK -->
-  <div v-if="retakeInfo" class="mt-6 bg-white p-4 rounded border space-y-2">
+  <div v-if="retakeInfo" class="mt-6 bg-white dark:bg-gray-900/60 p-5 rounded-xl border border-gray-200/80 dark:border-gray-700/80 space-y-2">
 
     <p class="text-base font-semibold text-red-500">
       You cannot retake the test yet.
