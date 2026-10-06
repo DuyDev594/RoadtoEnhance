@@ -6,17 +6,27 @@ import mongoose from "mongoose";
 const app = express();
 const port = process.env.PORT || 3000;
 
-// CORS: chỉ cho phép frontend của bạn gọi API
+// CORS: cho phép frontend (cả domain chính và preview domain của Vercel)
 const allowedOrigins = [
-    process.env.CLIENT_URL,       // ví dụ https://roadtoenhance.vercel.app
+    process.env.CLIENT_URL,       // ví dụ https://roadto-enhance-liard.vercel.app
     "http://localhost:5173",      // khi chạy dev ở máy
+    "http://localhost:3000",
 ].filter(Boolean);
 
 app.use(
     cors({
         origin: (origin, cb) => {
-            if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-            cb(new Error("Not allowed by CORS"));
+            if (!origin) return cb(null, true);
+
+            const cleanOrigin = origin.replace(/\/$/, "");
+            const isAllowed =
+                allowedOrigins.some((allowed) => allowed.replace(/\/$/, "") === cleanOrigin) ||
+                /\.vercel\.app$/.test(cleanOrigin);
+
+            if (isAllowed) {
+                return cb(null, true);
+            }
+            cb(null, false);
         },
         credentials: true,
     })
